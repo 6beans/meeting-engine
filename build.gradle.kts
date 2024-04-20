@@ -30,6 +30,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 
 tasks.withType<Test> {
