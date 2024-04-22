@@ -1,10 +1,12 @@
 package ru.sixbeans.meetingengine.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.sixbeans.meetingengine.entity.User;
 
 import java.util.Optional;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsBySub(String sub);
