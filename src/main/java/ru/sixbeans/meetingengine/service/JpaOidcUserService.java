@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
-import static java.time.LocalDate.now;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,29 +25,39 @@ public class JpaOidcUserService implements OAuth2UserService<OidcUserRequest, Oi
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUserService delegate = new OidcUserService();
         OidcUser oidcUser = delegate.loadUser(userRequest);
+        updateUserDetails(oidcUser);
+        return oidcUser;
+    }
+
+    private void updateUserDetails(OidcUser oidcUser) {
+        String sub = generateSignedSub(oidcUser);
+        if (!userRepository.existsBySub(sub))
+            createUser(oidcUser, sub);
+    }
+
+    private String generateSignedSub(OidcUser oidcUser) {
         String host = oidcUser.getIssuer().getHost();
         String sub = oidcUser.getSubject();
-        String name = oidcUser.getFullName();
-        String email = oidcUser.getEmail();
+        return "%s-%s".formatted(host, sub);
+    }
 
-        String photoUrl = oidcUser.getPicture();
-        photoUrl = photoUrl.substring(0, photoUrl.indexOf('=') + 1) + "h512-c";
-        var avatar = fileFetchingService.get(photoUrl);
+    private void createUser(OidcUser oidcUser, String signedSub) {
+        String photoUrl = adjustPhotoUrl(oidcUser.getPicture());
+        Optional<byte[]> avatar = fileFetchingService.get(photoUrl);
 
-        sub = "%s-%s".formatted(host, sub);
+        User user = new User();
+        user.setSub(signedSub);
+        user.setEmail(oidcUser.getEmail());
+        user.setFullName(oidcUser.getFullName());
+        user.setMemberSince(java.time.LocalDate.now());
+        user.setUserName(oidcUser.getSubject());
+        avatar.ifPresent(user::setAvatar);
+        user.setProfileCompleted(false);
 
-        if (!userRepository.existsBySub(sub)) {
-            User user = new User();
-            user.setSub(sub);
-            user.setEmail(email);
-            user.setFullName(name);
-            user.setMemberSince(now());
-            user.setUserName("" + sub.hashCode());
-            avatar.ifPresent(user::setAvatar);
-            user.setProfileCompleted(false);
-            userRepository.save(user);
-        }
+        userRepository.save(user);
+    }
 
-        return oidcUser;
+    private String adjustPhotoUrl(String photoUrl) {
+        return photoUrl.substring(0, photoUrl.indexOf('=') + 1) + "h512-c";
     }
 }
