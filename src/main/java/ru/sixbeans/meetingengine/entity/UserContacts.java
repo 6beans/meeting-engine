@@ -17,10 +17,9 @@ public class UserContacts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long contactId;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
     private User user;
 
     @Column

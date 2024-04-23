@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,9 +17,10 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "tags")
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     @Size(min = 1, max = 100)
@@ -29,5 +31,5 @@ public class Tag {
     private String category;
 
     @ManyToMany(mappedBy = "tags")
-    private List<User> users;
+    private Set<User> users = new HashSet<>();
 }
