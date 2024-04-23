@@ -17,23 +17,23 @@ import static org.springframework.security.web.csrf.CookieCsrfTokenRepository.wi
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     private final OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(a -> a
-                        .requestMatchers("/", "/home", "/login", "/webjars/**").permitAll()
+                        .requestMatchers("/", "/", "/login", "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/", true)
                         .userInfoEndpoint(it -> it.oidcUserService(oidcUserService))
                         .failureHandler(authenticationFailureHandler()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/home")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
