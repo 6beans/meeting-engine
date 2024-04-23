@@ -40,6 +40,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<Test> {
