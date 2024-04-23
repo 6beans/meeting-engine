@@ -48,15 +48,9 @@ public class User {
     @Size(max = 3000)
     private String profileDescription;
 
-    @Column
-    @Size(min=1, max=64)
-    private String telegramLink;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private UserContacts userContacts;
 
-    @Column
-    @Size(min=1, max=255)
-    private String vkLink;
-
-    // Связываем User'a с таблицей тегов
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "users_tags",
@@ -65,7 +59,6 @@ public class User {
     )
     private Set<Tag> tags;
 
-    // Связываем User'a с таблицей users_acquaintances, которая отвечает за связь пользователя с людьми, которых он лайкнул
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "users_acquaintances",
             joinColumns = { @JoinColumn(name = "user_id") },
