@@ -126,9 +126,9 @@
                 </div>
                 <div class="social-buttons">
                     <button class="btn icon-button"><i class="fab fa-vk"></i></button>
-                    <button class="btn icon-button"
-                            th:attr="onclick=|window.open('@{/oauth2/authorization/google}', '_blank')|"><i
-                            class="fab fa-google"></i></button>
+                    <a class="btn icon-button" th:href="@{/oauth2/authorization/google}">
+                        <i class="fab fa-google"></i>
+                    </a>
                     <button class="btn icon-button"><i class="fab fa-github"></i></button>
                 </div>
             </div>
