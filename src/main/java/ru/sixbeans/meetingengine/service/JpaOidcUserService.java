@@ -31,7 +31,7 @@ public class JpaOidcUserService implements OAuth2UserService<OidcUserRequest, Oi
 
     private void updateUserDetails(OidcUser oidcUser) {
         String sub = generateSignedSub(oidcUser);
-        if (!userRepository.existsBySub(sub))
+        if (!userRepository.existsBySignedSub(sub))
             createUser(oidcUser, sub);
     }
 
