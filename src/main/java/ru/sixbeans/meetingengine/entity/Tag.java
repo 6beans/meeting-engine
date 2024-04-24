@@ -1,7 +1,7 @@
 package ru.sixbeans.meetingengine.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,12 +22,12 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false, unique = true)
-    @Size(min = 1, max = 100)
     private String title;
 
+    @NotBlank
     @Column(nullable = false)
-    @Size(min = 1, max = 100)
     private String category;
 
     @ManyToMany(mappedBy = "tags")

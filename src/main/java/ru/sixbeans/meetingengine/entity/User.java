@@ -2,7 +2,6 @@ package ru.sixbeans.meetingengine.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +34,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String userName;
 
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -47,7 +47,6 @@ public class User {
     @Column(nullable = false)
     private Boolean profileCompleted;
 
-    @Size(max = 3000)
     private String profileDescription;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -55,6 +54,7 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Tag> tags = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> friends = new HashSet<>();
 }
