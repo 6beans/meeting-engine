@@ -46,7 +46,7 @@ public class JpaOidcUserService implements OAuth2UserService<OidcUserRequest, Oi
         Optional<byte[]> avatar = fileFetchingService.get(photoUrl);
 
         User user = new User();
-        user.setSub(signedSub);
+        user.setSignedSub(signedSub);
         user.setEmail(oidcUser.getEmail());
         user.setFullName(oidcUser.getFullName());
         user.setMemberSince(java.time.LocalDate.now());

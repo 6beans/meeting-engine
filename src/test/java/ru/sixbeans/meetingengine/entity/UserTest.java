@@ -26,14 +26,14 @@ public class UserTest {
         User user1 = new User();
         user1.setFullName("user1");
         user1.setUserName("user1");
-        user1.setSub("11111111111");
+        user1.setSignedSub("11111111111");
         user1.setEmail("user1@example.com");
         user1.setProfileCompleted(false);
 
         User user2 = new User();
         user2.setFullName("user2");
         user2.setUserName("user2");
-        user2.setSub("222222222222");
+        user2.setSignedSub("222222222222");
         user2.setEmail("user2@example.com");
         user2.setProfileCompleted(false);
 
@@ -55,14 +55,14 @@ public class UserTest {
         User user1 = new User();
         user1.setFullName("user1");
         user1.setUserName("user1");
-        user1.setSub("11111111111");
+        user1.setSignedSub("11111111111");
         user1.setEmail("user1@example.com");
         user1.setProfileCompleted(false);
 
         User user2 = new User();
         user2.setFullName("user2");
         user2.setUserName("user2");
-        user2.setSub("222222222222");
+        user2.setSignedSub("222222222222");
         user2.setEmail("user2@example.com");
         user2.setProfileCompleted(false);
 
@@ -89,7 +89,7 @@ public class UserTest {
     void testAddTagToUser() {
         User user = new User();
         user.setFullName("user");
-        user.setSub("0000000000");
+        user.setSignedSub("0000000000");
         user.setUserName("userWithTag");
         user.setEmail("userWithTag@example.com");
         user.setProfileCompleted(false);
@@ -115,7 +115,7 @@ public class UserTest {
     void testRemoveTagFromUser() {
         User user = new User();
         user.setFullName("user");
-        user.setSub("0000000000");
+        user.setSignedSub("0000000000");
         user.setUserName("userWithoutTag");
         user.setEmail("userWithoutTag@example.com");
         user.setProfileCompleted(false);
