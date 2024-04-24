@@ -24,22 +24,22 @@ public class Event {
 
     @NotBlank
     @Column(unique = true, nullable = false)
-    private String eventName;
+    private String name;
 
-    private String eventDescription;
+    private String description;
 
     @ManyToMany
     private Set<Tag> tags;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private User eventOwner;
+    private User owner;
 
     @ManyToMany
     private Set<User> members;
 
     @Column(columnDefinition = "Date")
-    private LocalDate eventCreateDate;
+    private LocalDate createDate;
 
     @Column(columnDefinition = "Date")
-    private LocalDate eventEndDate;
+    private LocalDate endDate;
 }
