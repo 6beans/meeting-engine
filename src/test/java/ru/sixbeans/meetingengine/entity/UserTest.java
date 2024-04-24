@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import ru.sixbeans.meetingengine.repository.TagRepository;
 import ru.sixbeans.meetingengine.repository.UserRepository;
+import ru.sixbeans.meetingengine.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Import(UserService.class)
 public class UserTest {
 
     @Autowired
@@ -17,6 +20,9 @@ public class UserTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private TagRepository tagRepository;
@@ -37,7 +43,7 @@ public class UserTest {
         user2.setEmail("user2@example.com");
         user2.setProfileCompleted(false);
 
-        user1.addFriend(user2);
+        userService.addFriend(user1, user2);
 
         entityManager.persist(user1);
         entityManager.persist(user2);
@@ -66,13 +72,13 @@ public class UserTest {
         user2.setEmail("user2@example.com");
         user2.setProfileCompleted(false);
 
-        user1.addFriend(user2);
+        userService.addFriend(user1, user2);
 
         entityManager.persist(user1);
         entityManager.persist(user2);
         entityManager.flush();
 
-        user1.removeFriend(user2);
+        userService.removeFriend(user1, user2);
 
         entityManager.persist(user1);
         entityManager.persist(user2);
@@ -98,7 +104,7 @@ public class UserTest {
         tag.setTitle("SpringBoot");
         tag.setCategory("Framework");
 
-        user.addTag(tag);
+        userService.addTag(user, tag);
 
         entityManager.persist(user);
         entityManager.persist(tag);
@@ -124,13 +130,13 @@ public class UserTest {
         tag.setTitle("Java");
         tag.setCategory("Programming Language");
 
-        user.addTag(tag);
+        userService.addTag(user, tag);
 
         entityManager.persist(user);
         entityManager.persist(tag);
         entityManager.flush();
 
-        user.removeTag(tag);
+        userService.removeTag(user, tag);
 
         entityManager.persist(user);
         entityManager.flush();

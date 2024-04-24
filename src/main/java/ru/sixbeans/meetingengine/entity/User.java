@@ -57,24 +57,4 @@ public class User {
     private Set<Tag> tags = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> friends = new HashSet<>();
-
-    public void addTag(Tag tag) {
-        tag.getUsers().add(this);
-        tags.add(tag);
-    }
-
-    public void removeTag(Tag tag) {
-        tag.getUsers().remove(this);
-        tags.remove(tag);
-    }
-
-    public void addFriend(User user) {
-        user.friends.add(this);
-        friends.add(user);
-    }
-
-    public void removeFriend(User user) {
-        user.friends.remove(this);
-        friends.remove(user);
-    }
 }
