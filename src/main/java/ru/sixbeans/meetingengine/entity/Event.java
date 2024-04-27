@@ -29,12 +29,18 @@ public class Event {
     private String description;
 
     @ManyToMany
+    @JoinTable(name = "events_tags",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private User owner;
 
     @ManyToMany
+    @JoinTable(name = "events_members",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> members;
 
     @Column(columnDefinition = "Date")
