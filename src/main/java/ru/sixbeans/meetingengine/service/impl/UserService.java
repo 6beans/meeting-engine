@@ -1,4 +1,4 @@
-package ru.sixbeans.meetingengine.service;
+package ru.sixbeans.meetingengine.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.sixbeans.meetingengine.entity.Tag;
