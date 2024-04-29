@@ -6,12 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import ru.sixbeans.meetingengine.repository.UserRepository;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import static org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse;
 
@@ -21,33 +22,36 @@ import static org.springframework.security.web.csrf.CookieCsrfTokenRepository.wi
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final UserRepository userRepository;
-    private final OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService;
+    private final AuthenticationSuccessHandler successHandler;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(a -> a
-                        .requestMatchers("/login", "/css/**", "/js/**", "/webjars/**").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                        .userInfoEndpoint(it -> it.oidcUserService(oidcUserService))
-                        .failureHandler(authenticationFailureHandler()))
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/css/**", "/js/**", "/webjars/**")
+                        .permitAll().anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler()))
                 .logout(logout -> logout
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll())
-                .csrf(c -> c.csrfTokenRepository(withHttpOnlyFalse()))
-                .build();
+                .csrf(c -> c.csrfTokenRepository(withHttpOnlyFalse()));
+
+        return http.build();
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
+        return new DefaultOAuth2UserService();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler failureHandler() {
         return (request, response, exception) -> {
-            request.getSession().setAttribute("flash", "Authentication failed");
-            log.error(exception.getMessage(), exception);
+            log.error("Authentication failure: {}", exception.getMessage(), exception);
             response.sendRedirect("/login?error");
         };
     }
