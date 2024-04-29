@@ -21,11 +21,15 @@
                     <span>Login with</span>
                 </div>
                 <div class="social-buttons">
-                    <button class="btn icon-button"><i class="fab fa-vk"></i></button>
+                    <a class="btn icon-button" th:href="@{/oauth2/authorization/github}">
+                        <i class="fab fa-github"></i>
+                    </a>
                     <a class="btn icon-button" th:href="@{/oauth2/authorization/google}">
                         <i class="fab fa-google"></i>
                     </a>
-                    <button class="btn icon-button"><i class="fab fa-github"></i></button>
+                    <a class="btn icon-button" th:href="@{/oauth2/authorization/vk}">
+                        <i class="fab fa-vk"></i>
+                    </a>
                 </div>
             </div>
         </div>
