@@ -24,7 +24,10 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String signedSub;
+    private String externalId;
+
+    @Column(nullable = false)
+    private String provider;
 
     @NotBlank
     @Column(nullable = false)
@@ -43,8 +46,6 @@ public class User {
 
     @Column(columnDefinition = "DATE")
     private LocalDate memberSince;
-
-    @Column(nullable = false)
 
     private String profileDescription;
 
