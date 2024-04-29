@@ -28,7 +28,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/webjars/**")
+                        .requestMatchers("", "/login", "/css/**", "/js/**", "/webjars/**")
                         .permitAll().anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2.loginPage("/login")
                         .successHandler(successHandler)
