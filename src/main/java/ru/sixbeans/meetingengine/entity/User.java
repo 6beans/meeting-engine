@@ -45,7 +45,6 @@ public class User {
     private LocalDate memberSince;
 
     @Column(nullable = false)
-    private Boolean profileCompleted;
 
     private String profileDescription;
 
