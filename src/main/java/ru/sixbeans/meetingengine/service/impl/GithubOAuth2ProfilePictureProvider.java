@@ -1,0 +1,35 @@
+package ru.sixbeans.meetingengine.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Component;
+import ru.sixbeans.meetingengine.service.FileFetchingService;
+import ru.sixbeans.meetingengine.service.OAuth2ProfilePictureProvider;
+
+import java.util.Objects;
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class GithubOAuth2ProfilePictureProvider implements OAuth2ProfilePictureProvider {
+
+    private final FileFetchingService fileFetchingService;
+
+    @Override
+    public boolean supports(OAuth2AuthenticationToken token) {
+        return "github".equals(token.getAuthorizedClientRegistrationId());
+    }
+
+    @Override
+    public Optional<byte[]> getProfilePicture(OAuth2AuthenticationToken token) {
+        OAuth2User user = token.getPrincipal();
+        String url = Objects.requireNonNull(user.getAttribute("avatar_url"));
+        String adjustedUrl = url + (url.contains("?") ? "&" : "?") + "s=512";
+        return fetchPicture(adjustedUrl);
+    }
+
+    private Optional<byte[]> fetchPicture(String url) {
+        return fileFetchingService.get(url);
+    }
+}
