@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank
     @Column(unique = true, nullable = false)
@@ -32,16 +33,16 @@ public class Event {
     @JoinTable(name = "events_tags",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
-    @ManyToOne()
+    @ManyToOne
     private User owner;
 
     @ManyToMany
     @JoinTable(name = "events_members",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> members;
+    private Set<User> members = new HashSet<>();
 
     @Column(columnDefinition = "Date")
     private LocalDate createDate;
