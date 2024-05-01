@@ -41,6 +41,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
     testRuntimeOnly("com.h2database:h2")
+    implementation("org.modelmapper:modelmapper:3.2.0")
+
 }
 
 tasks.withType<Test> {
