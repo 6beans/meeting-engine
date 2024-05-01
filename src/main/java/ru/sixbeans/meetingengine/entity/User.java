@@ -47,7 +47,7 @@ public class User {
 
     private String profileDescription;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserContacts userContacts;
 
     @ManyToMany
