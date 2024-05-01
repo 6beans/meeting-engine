@@ -1,4 +1,4 @@
-package ru.sixbeans.meetingengine.service.impl;
+package ru.sixbeans.meetingengine.service.impl.authorization;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
