@@ -1,20 +1,25 @@
 package ru.sixbeans.meetingengine.model;
 
-import ru.sixbeans.meetingengine.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record UserData(
-        String email,
-        String fullName,
-        String userName,
-        byte[] avatar
-) {
+import java.util.Set;
 
-    public static UserData from(User user) {
-        return new UserData(
-                user.getEmail(),
-                user.getFullName(),
-                user.getUserName(),
-                user.getAvatar()
-        );
-    }
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserData{
+    private Long id;
+    private String email;
+    private String fullName;
+    private String userName;
+    private byte[] avatar;
+    private String profileDescription;
+    private String tgLink;
+    private String vkLink;
+    private Set<TagData> tags;
+    private Set<FriendData> friends;
 }
