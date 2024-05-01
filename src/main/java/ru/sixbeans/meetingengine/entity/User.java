@@ -50,10 +50,16 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private UserContacts userContacts;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "users_tags",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "users_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
 
     @OneToMany(mappedBy = "owner")
