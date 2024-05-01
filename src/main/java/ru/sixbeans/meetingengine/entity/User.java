@@ -55,4 +55,13 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> friends = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Event> owned;
+
+    @ManyToMany
+    @JoinTable(name = "events_members",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<Event> participated;
 }
