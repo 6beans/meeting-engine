@@ -30,6 +30,6 @@ public class Tag {
     @Column(nullable = false)
     private String category;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "tags")
     private Set<User> users = new HashSet<>();
 }
