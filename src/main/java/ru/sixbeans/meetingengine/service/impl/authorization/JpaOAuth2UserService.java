@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
+import ru.sixbeans.meetingengine.entity.UserContacts;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class JpaOAuth2UserService implements AuthenticationSuccessHandler {
         var profilePicture = profilePictureService.getProfilePicture(token);
 
         User user = new User();
+
         user.setProvider(provider);
         user.setUserName(externalId);
         user.setExternalId(externalId);
@@ -49,6 +51,11 @@ public class JpaOAuth2UserService implements AuthenticationSuccessHandler {
         user.setFullName(oAuth2User.getAttribute("name"));
         user.setMemberSince(LocalDate.now());
         profilePicture.ifPresent(user::setAvatar);
+
+        UserContacts userContacts = new UserContacts();
+        userContacts.setUser(user);
+
+        user.setUserContacts(userContacts);
 
         userRepository.save(user);
     }
