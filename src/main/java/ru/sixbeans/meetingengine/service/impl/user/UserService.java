@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,65 +34,48 @@ public class UserService {
     public User findByToken(OAuth2AuthenticationToken token) {
         var provider = token.getAuthorizedClientRegistrationId();
         var externalId = token.getPrincipal().getName();
-        Optional<User> optionalUser = userRepository.findByProviderAndExternalId(provider, externalId);
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with the token was not found");
-        }
-
-        return optionalUser.get();
+        return userRepository.findByProviderAndExternalId(provider, externalId)
+                .orElseThrow(() -> new UsernameNotFoundException("User with the token was not found"));
     }
 
-    public User findByUsername(String userName) {
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with username = " + userName + " was not found");
-        }
-
-        return optionalUser.get();
+    public User findByUsername(String name) {
+        return userRepository.findByUserName(name)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username = " + name + " was not found"));
     }
 
-    public User findByUserId(long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with id = " + userId + " was not found");
-        }
-
-        return optionalUser.get();
+    public User findByUserId(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with username = " + id + " was not found"));
     }
 
     public Set<User> findAll() {
-        List<User> userList = userRepository.findAll();
-
-        return new HashSet<>(userList);
+        return new HashSet<>(userRepository.findAll());
     }
 
-    public Set<User> findUserFriends(String userName) {
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with username = " + userName + " was not found");
-        }
-
-        return optionalUser.get().getFriends();
+    public Set<User> findUserFriends(String name) {
+        return findByUsername(name).getFriends();
     }
 
     public boolean isFriend(long userId, long friendId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        Optional<User> optionalFriend = userRepository.findById(friendId);
+        User user = findByUserId(userId);
+        User friend = findByUserId(friendId);
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with user with id = " + userId + " not found");
-        }
+        Hibernate.initialize(user.getFriends());
 
-        if (optionalFriend.isEmpty()) {
-            throw new UsernameNotFoundException("Friend with id = " + friendId + " not found");
-        }
+        return user.getFriends().contains(friend);
+    }
 
-        Hibernate.initialize(optionalUser.get().getFriends());
-        return optionalUser.get().getFriends().contains(optionalFriend.get());
+
+    public Set<User> getFullFriendsByUserName(String name) {
+        User user = findByUsername(name);
+
+        return findByUsername(name).getFriends()
+                .stream()
+                .peek(friend -> Hibernate.initialize(friend.getFriends()))
+                .filter((friend) -> friend.getFriends().contains(user))
+                .collect(Collectors.toSet());
+
     }
 
     @Transactional
@@ -101,75 +85,35 @@ public class UserService {
 
     @Transactional
     public void addFriend(long userId, long friendId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        Optional<User> optionalFriend = userRepository.findById(friendId);
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with user with id = " + userId + " not found");
-        }
-
-        if (optionalFriend.isEmpty()) {
-            throw new UsernameNotFoundException("Friend with id = " + friendId + " not found");
-        }
-
-        Hibernate.initialize(optionalUser.get().getFriends());
-        optionalUser.get().getFriends().add(optionalFriend.get());
+        User user = findByUserId(userId);
+        User friend = findByUserId(friendId);
+        user.getFriends().add(friend);
     }
 
     @Transactional
     public void removeFriend(long userId, long friendId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        Optional<User> optionalFriend = userRepository.findById(friendId);
-
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with user with id = " + userId + " not found");
-        }
-
-        if (optionalFriend.isEmpty()) {
-            throw new UsernameNotFoundException("Friend with id = " + friendId + " not found");
-        }
-
-        Hibernate.initialize(optionalUser.get().getFriends());
-        optionalUser.get().getFriends().remove(optionalFriend.get());
+        User user = findByUserId(userId);
+        User friend = findByUserId(friendId);
+        user.getFriends().remove(friend);
     }
 
     @Transactional
     public void addTag(long userId, long tagId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        Optional<Tag> optionalTag = tagRepository.findById(tagId);
+        User user = findByUserId(userId);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new TagNotFoundException("Tag with id = " + tagId + " not found"));
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with id = " + userId + " not found");
-        }
-
-        if (optionalTag.isEmpty()) {
-            throw new TagNotFoundException("Tag with id = " + tagId + " not found");
-        }
-
-        Hibernate.initialize(optionalUser.get().getTags());
-        optionalUser.get().getTags().add(optionalTag.get());
-
-        Hibernate.initialize(optionalTag.get().getUsers());
-        optionalTag.get().getUsers().add(optionalUser.get());
+        user.getTags().add(tag);
+        tag.getUsers().add(user);
     }
 
     @Transactional
     public void removeTag(long userId, long tagId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        Optional<Tag> optionalTag = tagRepository.findById(tagId);
+        User user = findByUserId(userId);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(() -> new TagNotFoundException("Tag with id = " + tagId + " not found"));
 
-        if (optionalUser.isEmpty()) {
-            throw new UsernameNotFoundException("User with id = " + userId + " not found");
-        }
-
-        if (optionalTag.isEmpty()) {
-            throw new TagNotFoundException("Tag with id = " + tagId + " not found");
-        }
-
-        Hibernate.initialize(optionalTag.get().getUsers());
-        optionalTag.get().getUsers().remove(optionalUser.get());
-
-        Hibernate.initialize(optionalUser.get().getTags());
-        optionalUser.get().getTags().remove(optionalTag.get());
+        user.getTags().remove(tag);
+        tag.getUsers().remove(user);
     }
 }
