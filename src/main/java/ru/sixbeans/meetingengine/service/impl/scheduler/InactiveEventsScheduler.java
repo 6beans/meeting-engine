@@ -6,18 +6,18 @@ import ru.sixbeans.meetingengine.service.impl.event.EventService;
 import java.time.LocalDate;
 
 @Component
-public class EventDeleteScheduler {
+public class InactiveEventsScheduler {
 
 
     private final EventService eventService;
 
-    public EventDeleteScheduler(EventService eventService) {
+    public InactiveEventsScheduler(EventService eventService) {
         this.eventService = eventService;
     }
 
 
     @Scheduled(cron = "0 0 0 * * *")  // Ежедневно в полночь
     public void cleanupEvents() {
-        eventService.deleteAllByEndDateAfter(LocalDate.now());
+        eventService.changeConditionAllEventsByEndDate(LocalDate.now());
     }
 }
