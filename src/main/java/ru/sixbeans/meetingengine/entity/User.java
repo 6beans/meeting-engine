@@ -65,9 +65,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private Set<Event> owned;
 
-    @ManyToMany
-    @JoinTable(name = "events_members",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(mappedBy = "members")
     private Set<Event> participated;
 }
