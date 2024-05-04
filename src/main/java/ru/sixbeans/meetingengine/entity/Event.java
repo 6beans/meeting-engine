@@ -49,4 +49,6 @@ public class Event {
 
     @Column(columnDefinition = "Date")
     private LocalDate endDate;
+
+    private Boolean isActive;
 }
