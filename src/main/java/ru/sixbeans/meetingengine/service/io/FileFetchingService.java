@@ -1,4 +1,4 @@
-package ru.sixbeans.meetingengine.service;
+package ru.sixbeans.meetingengine.service.io;
 
 import jakarta.validation.constraints.NotNull;
 

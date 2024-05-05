@@ -1,9 +1,9 @@
-package ru.sixbeans.meetingengine.service.impl.authorization;
+package ru.sixbeans.meetingengine.service.io.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.sixbeans.meetingengine.service.FileFetchingService;
+import ru.sixbeans.meetingengine.service.io.FileFetchingService;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package ru.sixbeans.meetingengine.service;
+package ru.sixbeans.meetingengine.service.authorization;
 
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 

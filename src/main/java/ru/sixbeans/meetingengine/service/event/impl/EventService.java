@@ -1,4 +1,4 @@
-package ru.sixbeans.meetingengine.service.impl.event;
+package ru.sixbeans.meetingengine.service.event.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.expression.AccessException;

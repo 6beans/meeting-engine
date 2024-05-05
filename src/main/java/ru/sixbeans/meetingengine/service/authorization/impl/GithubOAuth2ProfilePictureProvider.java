@@ -1,11 +1,11 @@
-package ru.sixbeans.meetingengine.service.impl.authorization;
+package ru.sixbeans.meetingengine.service.authorization.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import ru.sixbeans.meetingengine.service.FileFetchingService;
-import ru.sixbeans.meetingengine.service.OAuth2ProfilePictureProvider;
+import ru.sixbeans.meetingengine.service.authorization.OAuth2ProfilePictureProvider;
 
 import java.util.Objects;
 import java.util.Optional;

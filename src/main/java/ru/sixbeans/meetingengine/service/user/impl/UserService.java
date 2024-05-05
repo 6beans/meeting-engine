@@ -1,7 +1,6 @@
-package ru.sixbeans.meetingengine.service.impl.user;
+package ru.sixbeans.meetingengine.service.user.impl;
 
 import org.hibernate.Hibernate;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -14,8 +13,6 @@ import ru.sixbeans.meetingengine.repository.TagRepository;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
