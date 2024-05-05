@@ -139,7 +139,11 @@ public class EventService {
         findAll().stream()
                 .filter((event -> event.getEndDate().isBefore(localDate)))
                 .forEach(event -> event.setIsActive(false));
+    }
 
+    @Transactional
+    public void deleteEventsOlderThan(LocalDate localDate){
+        eventRepository.deleteEventsOlderThan(localDate);
     }
 
     @Transactional
