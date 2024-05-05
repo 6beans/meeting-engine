@@ -1,15 +1,19 @@
 package ru.sixbeans.meetingengine.service.impl.event;
 
+import lombok.AllArgsConstructor;
+import org.springframework.expression.AccessException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.Event;
+import ru.sixbeans.meetingengine.entity.Tag;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.exception.EventInactiveException;
 import ru.sixbeans.meetingengine.exception.EventNotFoundException;
 import ru.sixbeans.meetingengine.repository.EventRepository;
 import ru.sixbeans.meetingengine.repository.UserRepository;
+import ru.sixbeans.meetingengine.service.impl.tag.TagService;
 import ru.sixbeans.meetingengine.service.impl.user.UserService;
 
 import java.time.LocalDate;
@@ -18,15 +22,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 @Transactional(readOnly = true)
 public class EventService {
     private final EventRepository eventRepository;
     private final UserService userService;
+    private final TagService tagService;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository, UserService userService) {
-        this.eventRepository = eventRepository;
-        this.userService = userService;
-    }
 
     public Event findById(long id) throws EventNotFoundException {
         return eventRepository.findById(id)
@@ -141,7 +143,17 @@ public class EventService {
     }
 
     @Transactional
-    public void addMember(long eventId, long userId) throws EventNotFoundException, UsernameNotFoundException {
+    public void addMemberByUserName(long eventId, String userName) throws EventNotFoundException, UsernameNotFoundException {
+        Event event = findById(eventId);
+        User user = userService.findByUsername(userName);
+
+        if (!event.getIsActive()) throw new EventInactiveException("Event inactive");
+
+        event.getMembers().add(user);
+    }
+
+    @Transactional
+    public void addMemberByUserId(long eventId, Long userId) throws EventNotFoundException, UsernameNotFoundException {
         Event event = findById(eventId);
         User user = userService.findByUserId(userId);
 
@@ -151,13 +163,47 @@ public class EventService {
     }
 
     @Transactional
-    public void deleteMember(long eventId, long userID) throws EventNotFoundException, UsernameNotFoundException {
+    public void deleteMemberByUserName(long eventId, String userName) throws EventNotFoundException, UsernameNotFoundException {
         Event event = findById(eventId);
-        User user = userService.findByUserId(userID);
+        User user = userService.findByUsername(userName);
 
         if (!event.getIsActive()) throw new EventInactiveException("Event inactive");
 
         event.getMembers().remove(user);
 
     }
+
+    @Transactional
+    public void deleteMemberByUserId(long eventId, Long userId, OAuth2AuthenticationToken token) throws EventNotFoundException, UsernameNotFoundException, AccessException {
+        Event event = findById(eventId);
+        User user = userService.findByUserId(userId);
+        User owner = userService.findByToken(token);
+
+        if (event.getOwner() != owner) throw new AccessException("Only owner can delete members");
+        if (!event.getIsActive()) throw new EventInactiveException("Event inactive");
+
+        event.getMembers().remove(user);
+
+    }
+
+    @Transactional
+    public void addTagByTagTitle(long eventId, String title) {
+        Event event = findById(eventId);
+        Tag tag = tagService.findByTitle(title);
+
+        if (!event.getIsActive()) throw new EventInactiveException("Event inactive");
+
+        event.getTags().add(tag);
+    }
+
+    @Transactional
+    public void deleteTagByTagTitle(long eventId, String title) {
+        Event event = findById(eventId);
+        Tag tag = tagService.findByTitle(title);
+
+        if (!event.getIsActive()) throw new EventInactiveException("Event inactive");
+
+        event.getTags().remove(tag);
+    }
+
 }
