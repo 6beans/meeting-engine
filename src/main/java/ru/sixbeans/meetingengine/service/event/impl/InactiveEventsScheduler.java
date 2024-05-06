@@ -14,6 +14,6 @@ public class InactiveEventsScheduler {
 
     @Scheduled(cron = "0 0 0 * * *") // Every day at midnight
     public void cleanupEvents() {
-        eventService.changeConditionAllEventsByEndDate(LocalDate.now());
+        eventService.updateEventsActivity(LocalDate.now());
     }
 }
