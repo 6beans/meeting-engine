@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 import static org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse;
 
@@ -20,6 +21,7 @@ import static org.springframework.security.web.csrf.CookieCsrfTokenRepository.wi
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 259200) // 3 days
 public class SecurityConfiguration {
 
     private final AuthenticationSuccessHandler successHandler;
