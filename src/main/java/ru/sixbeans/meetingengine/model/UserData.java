@@ -1,37 +1,23 @@
 package ru.sixbeans.meetingengine.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.sixbeans.meetingengine.entity.Event;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
 import ru.sixbeans.meetingengine.entity.User;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.io.Serializable;
+import java.util.Collection;
 
-public record UserData(
-        Long id,
-        String email,
-        String fullName,
-        String userName,
-        byte[] avatar,
-        String profileDescription,
-        String tgLink,
-        String vkLink,
-        Set<TagData> tags
-){
-    public static UserData from(User user) {
-        return new UserData(
-                user.getId(),
-                user.getEmail(),
-                user.getFullName(),
-                user.getUserName(),
-                user.getAvatar(),
-                user.getProfileDescription(),
-                user.getUserContacts().getTelegramLink(),
-                user.getUserContacts().getVkLink(),
-                user.getTags().stream().map(TagData::from).collect(Collectors.toSet())
-        );
-    }
+/**
+ * DTO for {@link User}
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record UserData(Long id,
+                       @NotBlank String userName,
+                       @NotBlank String email,
+                       byte[] avatar, String profileDescription,
+                       Collection<Long> tagIds,
+                       Collection<Long> eventIds,
+                       Collection<Long> memberEventIds)
+        implements Serializable {
+
 }
