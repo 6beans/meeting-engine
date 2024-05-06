@@ -6,24 +6,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @SuppressWarnings("unused")
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class EventNotFoundException extends EntityNotFoundException {
+public class UserNotFoundException extends EntityNotFoundException {
 
-    public EventNotFoundException() {
+    public UserNotFoundException() {
     }
 
-    public EventNotFoundException(long id) {
+    public UserNotFoundException(long id) {
         super("User with id " + id + " not found");
     }
 
-    public EventNotFoundException(Exception cause) {
+    public UserNotFoundException(Exception cause) {
         super(cause);
     }
 
-    public EventNotFoundException(String message) {
+    public UserNotFoundException(String message) {
         super(message);
     }
 
-    public EventNotFoundException(String message, Exception cause) {
+    public UserNotFoundException(String message, Exception cause) {
         super(message, cause);
     }
 }
