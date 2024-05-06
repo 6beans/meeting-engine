@@ -2,10 +2,7 @@ package ru.sixbeans.meetingengine.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "events")
@@ -24,31 +22,34 @@ public class Event {
     private Long id;
 
     @NotBlank
-    @Column(unique = true, nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private String title;
 
     private String description;
 
-    @ManyToMany
-    @JoinTable(name = "events_tags",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
+    @Builder.Default
     @ManyToMany
-    @JoinTable(name = "events_members",
+    @JoinTable(
+            name = "event_members",
             joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     private Set<User> members = new HashSet<>();
 
-    @Column(columnDefinition = "Date")
-    private LocalDate createDate;
+    @Builder.Default
+    @ManyToMany(mappedBy = "events")
+    private Set<Tag> tags = new HashSet<>();
 
-    @Column(columnDefinition = "Date")
+    @Column(columnDefinition = "DATE")
+    private LocalDate creationDate;
+
+    @Column(columnDefinition = "DATE")
     private LocalDate endDate;
 
+    @Column(nullable = false)
     private Boolean isActive;
 }
