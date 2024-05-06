@@ -40,7 +40,7 @@ public class EventServiceTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .externalId("externalId1")
+                .subject("externalId1")
                 .provider("provider1")
                 .personalInfo(PersonalInfo.builder()
                         .fullName("Full Name").build())
@@ -50,7 +50,7 @@ public class EventServiceTest {
                 .build();
 
         anotherUser = User.builder()
-                .externalId("externalId2")
+                .subject("externalId2")
                 .provider("provider2")
                 .personalInfo(PersonalInfo.builder()
                         .fullName("Another Full Name")

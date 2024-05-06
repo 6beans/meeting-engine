@@ -32,7 +32,7 @@ public class UserServiceTest {
     @BeforeEach
     void setUp() {
         user1 = User.builder()
-                .externalId("externalId1")
+                .subject("externalId1")
                 .provider("provider")
                 .userName("@username1")
                 .email("email1@example.com")
@@ -42,7 +42,7 @@ public class UserServiceTest {
                 .build();
 
         user2 = User.builder()
-                .externalId("externalId2")
+                .subject("externalId2")
                 .provider("provider")
                 .userName("@username2")
                 .email("email2@example.com")
