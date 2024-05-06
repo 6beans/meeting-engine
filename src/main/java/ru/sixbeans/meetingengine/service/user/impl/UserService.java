@@ -1,6 +1,8 @@
 package ru.sixbeans.meetingengine.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
@@ -19,6 +21,14 @@ public class UserService {
 
     private final UserMapper mapper;
     private final UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public UserData getUserByPrincipal(OidcUser principal) {
+        String provider = principal.getIssuer().getHost();
+        String subject = principal.getSubject();
+        return mapper.map(userRepository.findByProviderAndSubject(provider, subject)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(subject)));
+    }
 
     @Transactional(readOnly = true)
     public UserData getUserByUsername(String userName) {
