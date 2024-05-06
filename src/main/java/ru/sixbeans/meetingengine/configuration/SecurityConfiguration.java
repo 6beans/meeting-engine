@@ -6,9 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -32,7 +35,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/css/**", "/js/**", "/webjars/**")
                         .permitAll().anyRequest().authenticated())
+                .sessionManagement(s -> s.maximumSessions(1))
                 .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+                        .userInfoEndpoint(u -> u.oidcUserService(oidcUserService()))
                         .successHandler(successHandler)
                         .failureHandler(failureHandler()))
                 .logout(logout -> logout
@@ -43,6 +48,11 @@ public class SecurityConfiguration {
                 .csrf(c -> c.csrfTokenRepository(withHttpOnlyFalse()));
 
         return http.build();
+    }
+
+    @Bean
+    public OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
+        return new OidcUserService();
     }
 
     @Bean
