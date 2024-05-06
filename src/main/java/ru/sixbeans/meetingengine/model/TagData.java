@@ -1,21 +1,18 @@
 package ru.sixbeans.meetingengine.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
 import ru.sixbeans.meetingengine.entity.Tag;
 
-import java.util.stream.Collectors;
+import java.io.Serializable;
 
-public record TagData(
-        Long id,
-        String title,
-        String category
-) {
-    public static TagData from(Tag tag) {
-        return new TagData(
-                tag.getId(),
-                tag.getTitle(),
-                tag.getCategory()
-        );
-    }
+/**
+ * DTO for {@link Tag}
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record TagData(Long id,
+                      @NotBlank String title,
+                      @NotBlank String category)
+        implements Serializable {
 
 }
