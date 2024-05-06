@@ -48,7 +48,7 @@ public class User {
     private String profileDescription;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private UserContacts userContacts;
+    private PersonalInfo personalInfo;
 
     @ManyToMany
     @JoinTable(name = "users_tags",
