@@ -1,20 +1,23 @@
 package ru.sixbeans.meetingengine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
 import ru.sixbeans.meetingengine.entity.User;
 
-public record UserData(
-        String email,
-        String fullName,
-        String userName,
-        byte[] avatar
-) {
+import java.io.Serializable;
+import java.util.Collection;
 
-    public static UserData from(User user) {
-        return new UserData(
-                user.getEmail(),
-                user.getFullName(),
-                user.getUserName(),
-                user.getAvatar()
-        );
-    }
+/**
+ * DTO for {@link User}
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record UserData(Long id,
+                       @NotBlank String userName,
+                       @NotBlank String email,
+                       byte[] avatar, String profileDescription,
+                       Collection<Long> tagIds,
+                       Collection<Long> eventIds,
+                       Collection<Long> memberEventIds)
+        implements Serializable {
+
 }

@@ -2,18 +2,15 @@ package ru.sixbeans.meetingengine.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -24,11 +21,10 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String signedSub;
+    private String subject;
 
-    @NotBlank
     @Column(nullable = false)
-    private String fullName;
+    private String provider;
 
     @NotBlank
     @Column(unique = true, nullable = false)
@@ -41,20 +37,39 @@ public class User {
     @Lob
     private byte[] avatar;
 
-    @Column(columnDefinition = "DATE")
-    private LocalDate memberSince;
-
-    @Column(nullable = false)
-    private Boolean profileCompleted;
-
     private String profileDescription;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private UserContacts userContacts;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private PersonalInfo personalInfo;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "user_tags",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private Set<Tag> tags = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<User> friends = new HashSet<>();
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = @JoinColumn(name = "subscriber_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscribed_id")
+    )
+    private Set<User> subscriptions = new HashSet<>();
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "subscriptions")
+    private Set<User> subscribers = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Event> events = new HashSet<>();
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "members")
+    private Set<Event> memberEvents = new HashSet<>();
 }

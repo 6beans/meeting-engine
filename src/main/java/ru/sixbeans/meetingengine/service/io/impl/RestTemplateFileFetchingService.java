@@ -1,8 +1,9 @@
-package ru.sixbeans.meetingengine.service;
+package ru.sixbeans.meetingengine.service.io.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.sixbeans.meetingengine.service.io.FileFetchingService;
 
 import java.util.Optional;
 
@@ -10,12 +11,12 @@ import static org.springframework.http.HttpMethod.GET;
 
 @Service
 @RequiredArgsConstructor
-public class FileFetchingService {
+public class RestTemplateFileFetchingService implements FileFetchingService {
 
     private final RestTemplate restTemplate;
 
-    public Optional<byte[]> get(String photoUrl) {
-        var response = restTemplate.exchange(photoUrl, GET, null, byte[].class);
+    public Optional<byte[]> get(String fileUrl) {
+        var response = restTemplate.exchange(fileUrl, GET, null, byte[].class);
         return Optional.ofNullable(response.getBody());
     }
 }
