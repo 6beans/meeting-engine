@@ -10,9 +10,8 @@ import ru.sixbeans.meetingengine.entity.Event;
 import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.Tag;
 import ru.sixbeans.meetingengine.entity.User;
+import ru.sixbeans.meetingengine.mapper.EventMapper;
 import ru.sixbeans.meetingengine.mapper.EventMapperImpl;
-import ru.sixbeans.meetingengine.mapper.TagMapperImpl;
-import ru.sixbeans.meetingengine.mapper.UserMapperImpl;
 import ru.sixbeans.meetingengine.model.EventData;
 import ru.sixbeans.meetingengine.service.event.impl.EventService;
 
@@ -24,11 +23,14 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({EventService.class, EventMapperImpl.class, UserMapperImpl.class, TagMapperImpl.class})
+@Import({EventService.class, EventMapperImpl.class})
 public class EventServiceTest {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -36,6 +38,8 @@ public class EventServiceTest {
     private User user;
     private User anotherUser;
     private Event event;
+    private Event newEvent;
+    private Event nonActiveEvent;
 
     @BeforeEach
     void setUp() {
@@ -75,11 +79,31 @@ public class EventServiceTest {
                 .isActive(true)
                 .build();
 
+        nonActiveEvent = Event.builder()
+                .title("Event Title")
+                .description("Event Description")
+                .owner(user)
+                .creationDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(1))
+                .tags(new HashSet<>(Set.of(tag)))
+                .isActive(false)
+                .build();
+
+        newEvent = Event.builder()
+                .title("New Event")
+                .description("Description").owner(user)
+                .creationDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(1))
+                .isActive(true)
+                .build();
+
         entityManager.flush();
         entityManager.persist(tag);
         entityManager.persist(user);
         entityManager.persist(anotherUser);
         entityManager.persist(event);
+        entityManager.persist(nonActiveEvent);
+        entityManager.persist(newEvent);
     }
 
     @Test
@@ -90,23 +114,10 @@ public class EventServiceTest {
     }
 
     @Test
-    void testFindAll() {
-        List<EventData> events = eventService.findAll();
-        assertThat(events).hasSize(1);
-        assertThat(events.getFirst().title()).isEqualTo(event.getTitle());
-    }
-
-    @Test
     void testUpdateEvent() {
         EventData updatedEventData = new EventData(event.getId(), 2L, "Updated Title", event.getDescription(), event.getCreationDate(), event.getEndDate(), event.getIsActive(), List.of(), List.of());
         EventData result = eventService.updateEvent(event.getId(), updatedEventData);
         assertThat(result.title()).isEqualTo("Updated Title");
-    }
-
-    @Test
-    void testDeleteById() {
-        eventService.deleteById(event.getId());
-        assertThat(entityManager.find(Event.class, event.getId())).isNull();
     }
 
     @Test
@@ -129,5 +140,34 @@ public class EventServiceTest {
         eventService.updateEventsActivity(expirationDate);
         Event foundEvent = entityManager.find(Event.class, event.getId());
         assertThat(foundEvent.getIsActive()).isFalse();
+    }
+
+    @Test
+    void testFindAllActive() {
+        List<EventData> activeEvents = eventService.findAllActive();
+        assertThat(activeEvents).isNotEmpty();
+        assertThat(activeEvents).allMatch(EventData::isActive);
+    }
+
+    @Test
+    void testFindAllNonActive() {
+        List<EventData> nonActiveEvents = eventService.findAllNonActive();
+        assertThat(nonActiveEvents).isNotEmpty();
+        assertThat(nonActiveEvents).noneMatch(EventData::isActive);
+    }
+
+    @Test
+    void testFindAllByOwnerId() {
+        List<EventData> eventsByOwner = eventService.findAllByOwnerId(user.getId());
+        assertThat(eventsByOwner).isNotEmpty();
+        assertThat(eventsByOwner).allMatch(event -> event.ownerId().equals(user.getId()));
+    }
+
+    @Test
+    void testAddEventToUser() {
+        eventService.addEventToUser(eventMapper.map(newEvent), anotherUser.getId());
+        Event foundEvent = entityManager.find(Event.class, newEvent.getId());
+        assertThat(foundEvent).isNotNull();
+        assertThat(foundEvent.getOwner()).isEqualTo(anotherUser);
     }
 }

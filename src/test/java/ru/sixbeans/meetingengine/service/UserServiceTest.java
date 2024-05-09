@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({UserService.class, UserMapperImpl.class})
+@Import({UserService.class, UserMapperImpl.class,})
 public class UserServiceTest {
 
     @Autowired
