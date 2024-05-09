@@ -1,8 +1,6 @@
 package ru.sixbeans.meetingengine.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
@@ -23,55 +21,46 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserData getUserByPrincipal(OidcUser principal) {
-        String provider = principal.getIssuer().getHost();
-        String subject = principal.getSubject();
-        return mapper.map(userRepository.findByProviderAndSubject(provider, subject)
-                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(subject)));
-    }
-
-    @Transactional(readOnly = true)
     public UserData getUserByUsername(String userName) {
         var user = userRepository.findByUserName(userName);
         if (user.isEmpty() || !userName.startsWith("@"))
             throw new UserNotFoundException(userName);
-        else return mapper.map(user.get());
+        else return user.map(mapper::map)
+                .orElseThrow(() -> new UserNotFoundException(userName));
     }
 
     @Transactional(readOnly = true)
     public UserData getUserById(long userId) {
-        return mapper.map(userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId)));
+        return userRepository.findById(userId).map(mapper::map)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)
     public PersonalInfoData getUserPersonalInfoById(long userId) {
-        return mapper.map(userRepository.findById(userId).map(User::getPersonalInfo)
-                .orElseThrow(() -> new UserNotFoundException(userId)));
+        return userRepository.findById(userId).map(User::getPersonalInfo)
+                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)
     public List<UserData> findAllUserSubscriptions(long userId) {
-        return mapper.map(userRepository.getReferenceById(userId).getSubscriptions());
+        return userRepository.findById(userId).map(User::getSubscriptions)
+                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)
     public List<UserData> findAllUserSubscribers(long userId) {
-        return mapper.map(userRepository.getReferenceById(userId).getSubscribers());
+        return userRepository.findById(userId).map(User::getSubscribers)
+                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)
     public boolean isSubscriber(long userId, long subscriberId) {
-        var subscribers = userRepository.getReferenceById(userId).getSubscribers();
-        var subscriber = userRepository.getReferenceById(subscriberId);
-        return subscribers.contains(subscriber);
+        return userRepository.existsByIdAndSubscribers_Id(userId, subscriberId);
     }
 
     @Transactional(readOnly = true)
     public boolean isSubscription(long userId, long subscriptionId) {
-        var subscriptions = userRepository.getReferenceById(userId).getSubscriptions();
-        var subscription = userRepository.getReferenceById(subscriptionId);
-        return subscriptions.contains(subscription);
+        return userRepository.existsByIdAndSubscriptions_Id(userId, subscriptionId);
     }
 
     @Transactional
