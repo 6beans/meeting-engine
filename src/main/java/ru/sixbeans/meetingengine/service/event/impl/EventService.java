@@ -14,67 +14,44 @@ import ru.sixbeans.meetingengine.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.util.function.Predicate.not;
-
 @Service
 @RequiredArgsConstructor
 public class EventService {
 
-    private final EventMapper eventMapper;
+    private final EventMapper mapper;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
     public EventData getById(long eventId) {
-        return eventMapper.map(eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(eventId)));
-    }
-
-    public List<EventData> findAll() {
-        return eventMapper.map(eventRepository.findAll());
+        return eventRepository.findById(eventId).map(mapper::map)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
     }
 
     public List<EventData> findAllActive() {
-        return eventMapper.map(eventRepository.findAllByIsActive(true));
+        return mapper.map(eventRepository.findAllByIsActive(true));
     }
 
     public List<EventData> findAllNonActive() {
-        return eventMapper.map(eventRepository.findAllByIsActive(false));
+        return mapper.map(eventRepository.findAllByIsActive(false));
     }
 
     public List<EventData> findAllByOwnerId(long ownerId) {
-        return eventMapper.map(eventRepository.findAllByOwnerId(ownerId));
-    }
-
-    public List<EventData> findAllActiveByOwnerId(long ownerId) {
-        return findAllByOwnerId(ownerId).stream()
-                .filter(EventData::isActive)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<EventData> findAllNonActiveByOwnerId(long ownerId) {
-        return findAllByOwnerId(ownerId).stream()
-                .filter(not(EventData::isActive))
-                .toList();
+        return mapper.map(eventRepository.findAllByOwnerId(ownerId));
     }
 
     @Transactional
     public void addEventToUser(EventData eventData, long userId) {
         User user = userRepository.getReferenceById(userId);
-        Event event = eventMapper.map(eventData);
-        user.getEvents().add(event);
+        Event event = mapper.map(eventData);
+        event.setOwner(user);
+        eventRepository.save(event);
     }
 
     @Transactional
     public EventData updateEvent(Long eventId, EventData eventData) {
         Event event = eventRepository.getReferenceById(eventId);
-        eventMapper.map(eventData, event);
-        return eventMapper.map(eventRepository.save(event));
-    }
-
-    @Transactional
-    public void deleteById(long eventId) {
-        eventRepository.deleteById(eventId);
+        mapper.map(eventData, event);
+        return mapper.map(eventRepository.save(event));
     }
 
     @Transactional
@@ -93,7 +70,8 @@ public class EventService {
 
     @Transactional
     public void updateEventsActivity(LocalDate expirationDate) {
-        eventRepository.findAllByIsActive(true).stream()
+        List<Event> activeEvents = eventRepository.findAllByIsActive(true);
+        activeEvents.stream()
                 .filter(event -> expirationDate.isBefore(event.getEndDate()))
                 .forEach(event -> event.setIsActive(false));
     }
