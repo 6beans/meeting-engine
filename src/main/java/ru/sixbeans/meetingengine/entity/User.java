@@ -43,12 +43,7 @@ public class User {
     private PersonalInfo personalInfo;
 
     @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "user_tags",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+    @ManyToMany(mappedBy = "users")
     private Set<Tag> tags = new HashSet<>();
 
     @Builder.Default
