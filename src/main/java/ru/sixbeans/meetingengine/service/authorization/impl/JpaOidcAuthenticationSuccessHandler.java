@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class JpaOidcAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final OidcUserService userService;
+    private final OidcUserInitializationService userService;
 
     @Override
     @SneakyThrows
@@ -23,9 +23,7 @@ public class JpaOidcAuthenticationSuccessHandler implements AuthenticationSucces
         if (authentication.getPrincipal() instanceof OidcUser user) {
             Long userId = userService.createUserIfNotExist(user);
             request.getSession().setAttribute("userId", userId);
-        } else {
-            throw new IllegalStateException("Unsupported authentication type");
-        }
+        } else throw new IllegalStateException("Unsupported authentication type: " + authentication);
         response.sendRedirect("/");
     }
 }
