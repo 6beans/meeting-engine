@@ -1,8 +1,12 @@
 package ru.sixbeans.meetingengine.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.mapper.UserMapper;
@@ -10,55 +14,70 @@ import ru.sixbeans.meetingengine.model.PersonalInfoData;
 import ru.sixbeans.meetingengine.model.UserData;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
+    public Set<UserData> getAllUsers() {
+        return new HashSet<>(userRepository.findAll().stream().map(userMapper::map).toList());
+    }
+
+    public UserData getUserByPrincipal(OidcUser principal) {
+        String provider = principal.getIssuer().getHost();
+        String subject = principal.getSubject();
+        return userMapper.map(userRepository.findByProviderAndSubject(provider, subject)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException(subject)));
+    }
+
     public UserData getUserByUsername(String userName) {
         var user = userRepository.findByUserName(userName);
         if (user.isEmpty() || !userName.startsWith("@"))
             throw new UserNotFoundException(userName);
-        else return user.map(mapper::map)
+        else return user.map(userMapper::map)
                 .orElseThrow(() -> new UserNotFoundException(userName));
     }
 
-    @Transactional(readOnly = true)
     public UserData getUserById(long userId) {
-        return userRepository.findById(userId).map(mapper::map)
+        return userRepository.findById(userId).map(userMapper::map)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    @Transactional(readOnly = true)
+    public UserData getUserById(long userId, long userIdFromUrl) {
+        // If these users have mutual subscriptions or id of authorized user equals id from URL
+        if ((isSubscription(userId, userIdFromUrl) && isSubscriber(userId, userIdFromUrl)) || (userId == userIdFromUrl)) {
+            return getUserById(userIdFromUrl);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied. You do not have permission to access this resource.");
+        }
+    }
+
     public PersonalInfoData getUserPersonalInfoById(long userId) {
         return userRepository.findById(userId).map(User::getPersonalInfo)
-                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
+                .map(userMapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    @Transactional(readOnly = true)
     public List<UserData> findAllUserSubscriptions(long userId) {
         return userRepository.findById(userId).map(User::getSubscriptions)
-                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
+                .map(userMapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    @Transactional(readOnly = true)
     public List<UserData> findAllUserSubscribers(long userId) {
         return userRepository.findById(userId).map(User::getSubscribers)
-                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
+                .map(userMapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
-    @Transactional(readOnly = true)
     public boolean isSubscriber(long userId, long subscriberId) {
         return userRepository.existsByIdAndSubscribers_Id(userId, subscriberId);
     }
 
-    @Transactional(readOnly = true)
     public boolean isSubscription(long userId, long subscriptionId) {
         return userRepository.existsByIdAndSubscriptions_Id(userId, subscriptionId);
     }
@@ -86,7 +105,7 @@ public class UserService {
         Set<User> subscribers = user.getSubscribers();
         return subscriptions.stream()
                 .filter(subscribers::contains)
-                .map(mapper::map)
+                .map(userMapper::map)
                 .toList();
     }
 }
