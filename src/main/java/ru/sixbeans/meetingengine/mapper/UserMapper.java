@@ -9,6 +9,7 @@ import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.Tag;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.model.PersonalInfoData;
+import ru.sixbeans.meetingengine.model.TagData;
 import ru.sixbeans.meetingengine.model.UserData;
 
 import java.util.Collection;
@@ -24,14 +25,14 @@ public interface UserMapper {
                 .toList();
     }
 
-    @Named("tagToTagId")
-    static Collection<Long> tagToTagId(Collection<Tag> tags) {
+    @Named("tagToTagData")
+    static Collection<TagData> tagToTagData(Collection<Tag> tags) {
         return tags.stream()
-                .map(Tag::getId)
+                .map(tag -> new TagData(tag.getId(), tag.getTitle(), tag.getCategory()))
                 .toList();
     }
 
-    @Mapping(source = "tags", target = "tagIds", qualifiedByName = "tagToTagId")
+    @Mapping(source = "tags", target = "tagDTOs", qualifiedByName = "tagToTagData")
     @Mapping(source = "events", target = "eventIds", qualifiedByName = "eventToEventId")
     @Mapping(source = "memberEvents", target = "memberEventIds", qualifiedByName = "eventToEventId")
     UserData map(User user);
