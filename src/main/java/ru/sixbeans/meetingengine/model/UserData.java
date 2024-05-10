@@ -15,9 +15,8 @@ public record UserData(Long id,
                        @NotBlank String userName,
                        @NotBlank String email,
                        byte[] avatar, String profileDescription,
-                       Collection<Long> tagIds,
+                       Collection<TagData> tagDTOs,
                        Collection<Long> eventIds,
                        Collection<Long> memberEventIds)
         implements Serializable {
-
 }
