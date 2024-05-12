@@ -10,7 +10,9 @@ import ru.sixbeans.meetingengine.model.PersonalInfoData;
 import ru.sixbeans.meetingengine.model.UserData;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -21,7 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserData getUserByUsername(String userName) {
+    public UserData getUser(String userName) {
         var user = userRepository.findByUserName(userName);
         if (user.isEmpty() || !userName.startsWith("@"))
             throw new UserNotFoundException(userName);
@@ -30,13 +32,20 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserData getUserById(long userId) {
+    public UserData getUser(long userId) {
         return userRepository.findById(userId).map(mapper::map)
                 .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)
-    public PersonalInfoData getUserPersonalInfoById(long userId) {
+    public Collection<UserData> getUsers(Collection<Long> userIds) {
+        return userIds.stream().map(userRepository::findById)
+                .flatMap(Optional::stream).map(mapper::map)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PersonalInfoData getUserPersonalInfo(long userId) {
         return userRepository.findById(userId).map(User::getPersonalInfo)
                 .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }

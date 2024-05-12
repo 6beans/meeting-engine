@@ -11,5 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TagMapper {
 
-    List<TagData> map(Collection<Tag> tagData);
+    TagData map(Tag tag);
+
+    List<TagData> map(Collection<Tag> tags);
 }

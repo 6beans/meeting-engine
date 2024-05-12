@@ -60,15 +60,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void testGetUserByUsername() {
-        UserData userData = userService.getUserByUsername(user1.getUserName());
-        assertThat(userData).isNotNull();
-        assertThat(userData.userName()).isEqualTo(user1.getUserName());
-    }
-
-    @Test
-    void testGetUserById() {
-        UserData userData = userService.getUserById(user1.getId());
+    void testGetUser() {
+        UserData userData = userService.getUser(user1.getId());
         assertThat(userData).isNotNull();
         assertThat(userData.userName()).isEqualTo(user1.getUserName());
     }

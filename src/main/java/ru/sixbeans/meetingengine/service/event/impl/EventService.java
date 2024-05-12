@@ -12,6 +12,7 @@ import ru.sixbeans.meetingengine.repository.EventRepository;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Service
