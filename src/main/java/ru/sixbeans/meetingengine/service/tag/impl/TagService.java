@@ -15,6 +15,13 @@ public class TagService {
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
+    public Collection<TagData> findAllUserTags(long userId) {
+        return userRepository.findById(userId)
+                .map(User::getTags).map(tagMapper::map)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
+
     @Transactional
     public void addTagToUser(long userId, long tagId) {
         User user = userRepository.getReferenceById(userId);

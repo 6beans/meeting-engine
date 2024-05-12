@@ -22,6 +22,12 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
+    public Collection<Long> findAllEventMemberIds(long eventId) {
+        return eventRepository.findById(eventId).stream()
+                .map(Event::getMembers).flatMap(Collection::stream)
+                .map(User::getId).toList();
+    }
+
     public EventData getById(long eventId) {
         return eventRepository.findById(eventId).map(mapper::map)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
