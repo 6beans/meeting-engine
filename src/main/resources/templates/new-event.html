@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Event</title>
+    <link href="/webjars/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container mt-3">
+    <h1>Create New Event</h1>
+    <form method="post" th:action="@{/events}" th:object="${event}">
+        <div class="mb-3">
+            <label class="form-label" for="title">Title</label>
+            <input class="form-control" id="title" required th:field="*{title}" type="text">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="creationDate">Creation Date</label>
+            <input class="form-control" id="creationDate" required th:field="*{creationDate}" type="date">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="endDate">End Date</label>
+            <input class="form-control" id="endDate" required th:field="*{endDate}" type="date">
+        </div>
+        <div class="mb-3 form-check">
+            <input checked="checked" class="form-check-input" id="isActive" th:field="*{isActive}" type="checkbox">
+            <label class="form-check-label" for="isActive">Active</label>
+        </div>
+        <button class="btn btn-success" type="submit">Create Event</button>
+    </form>
+</div>
+<script src="/webjars/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
