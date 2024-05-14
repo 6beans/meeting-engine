@@ -18,21 +18,24 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findAllByOwnerId(Long ownerId, Pageable pageable);
 
-    @Query(value = "SELECT events.*" +
-            "FROM public.tag_events" +
-            "JOIN events ON tag_events.events_id = events.id" +
-            "WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_events WHERE events_id = :eventId)" +
-            "AND tag_events.events_id != :eventId" +
-            "GROUP BY events.id" +
-            "ORDER BY  COUNT(tag_events.tags_id) DESC", nativeQuery = true)
+    @Query(value = """
+            SELECT events.*
+            FROM public.tag_events
+            JOIN events ON tag_events.events_id = events.id
+            WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_events WHERE events_id = :eventId)
+            AND tag_events.events_id != :eventId
+            GROUP BY events.id
+            ORDER BY  COUNT(tag_events.tags_id)
+            DESC""", nativeQuery = true)
     List<Event> getRecommendedEvents(@Param("eventId") Long eventId);
 
-    @Query(value = "SELECT events.*" +
-            "FROM events" +
-            "JOIN tag_events ON events.id = tag_events.events_id" +
-            "WHERE tag_events.tags_id IN :tags" +
-            "GROUP BY events.id" +
-            "ORDER BY COUNT(tag_events.tags_id) DESC", nativeQuery = true)
+    @Query(value = """
+            SELECT events.*
+            FROM events
+            JOIN tag_events ON events.id = tag_events.events_id
+            WHERE tag_events.tags_id IN :tags\
+            GROUP BY events.id
+            ORDER BY COUNT(tag_events.tags_id)
+            DESC""", nativeQuery = true)
     List<Event> filterEventsByTags(@Param("tags") Set<Integer> tags);
-
 }
