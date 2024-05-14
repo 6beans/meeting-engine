@@ -35,8 +35,8 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         user1 = User.builder()
+                .issuer("issuer")
                 .subject("externalId1")
-                .provider("provider")
                 .userName("@username1")
                 .email("email1@example.com")
                 .personalInfo(PersonalInfo.builder()
@@ -44,8 +44,8 @@ class UserServiceTest {
                         .build())
                 .build();
         user2 = User.builder()
+                .issuer("issuer")
                 .subject("externalId2")
-                .provider("provider")
                 .userName("@username2")
                 .email("email2@example.com")
                 .personalInfo(PersonalInfo.builder()

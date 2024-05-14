@@ -20,11 +20,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String issuer;
+
     @Column(unique = true, nullable = false)
     private String subject;
-
-    @Column(nullable = false)
-    private String provider;
 
     @NotBlank
     @Column(unique = true, nullable = false)

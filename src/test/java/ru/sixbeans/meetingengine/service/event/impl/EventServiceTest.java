@@ -33,8 +33,8 @@ class EventServiceTest {
     @BeforeEach
     void setUp() {
         user = User.builder()
+                .issuer("issuer")
                 .subject("externalId1")
-                .provider("provider")
                 .userName("@username1")
                 .email("email1@example.com")
                 .personalInfo(PersonalInfo.builder()

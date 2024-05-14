@@ -1,12 +1,12 @@
 package ru.sixbeans.meetingengine.service.authorization.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.User;
+import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
 @Service
@@ -18,18 +18,18 @@ public class OidcUserInitializationService {
 
     @Transactional
     public Long createUserIfNotExist(OidcUser principal) {
-        String provider = principal.getIssuer().getHost();
+        String issuer = principal.getIssuer().getHost();
         String subject = principal.getSubject();
-        if (userRepository.existsByProviderAndSubject(provider, subject)) {
-            return userRepository.findByProviderAndSubject(provider, subject)
-                    .orElseThrow(() -> new UsernameNotFoundException("User " + principal + " already exists"))
+        if (userRepository.existsByIssuerAndSubject(issuer, subject)) {
+            return userRepository.findByIssuerAndSubject(issuer, subject)
+                    .orElseThrow(() -> new UserNotFoundException("%s:%s".formatted(issuer, subject)))
                     .getId();
         }
 
         var profilePicture = profilePictureService.getProfilePicture(principal);
 
         User user = new User();
-        user.setProvider(provider);
+        user.setIssuer(issuer);
         user.setUserName(subject);
         user.setSubject(subject);
         user.setEmail(principal.getEmail());
