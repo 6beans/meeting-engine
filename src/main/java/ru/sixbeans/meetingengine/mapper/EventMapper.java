@@ -25,8 +25,6 @@ public interface EventMapper {
     }
 
     @Mapping(source = "owner", target = "ownerId", qualifiedByName = "userToUserId")
-    @Mapping(source = "members", target = "memberIds", qualifiedByName = "userToUserId")
-    @Mapping(source = "tags", target = "tagIds", qualifiedByName = "tagToTagId")
     EventData map(Event event);
 
     Event map(EventData eventData);

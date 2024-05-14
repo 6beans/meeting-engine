@@ -1,6 +1,8 @@
 package ru.sixbeans.meetingengine.service.event.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.Event;
@@ -66,14 +68,14 @@ public class EventService {
     }
 
     @Transactional
-    public void joinEvent(long userId, long eventId) {
+    public void addMemberToEvent(long userId, long eventId) {
         var user = userRepository.getReferenceById(userId);
         var event = eventRepository.getReferenceById(eventId);
         event.getMembers().add(user);
     }
 
     @Transactional
-    public void leaveEvent(long userId, long eventId) {
+    public void removeMemberFromEvent(long userId, long eventId) {
         var user = userRepository.getReferenceById(userId);
         var event = eventRepository.getReferenceById(eventId);
         event.getMembers().remove(user);
