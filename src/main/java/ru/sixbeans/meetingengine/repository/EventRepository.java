@@ -1,5 +1,7 @@
 package ru.sixbeans.meetingengine.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,8 +16,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByOwnerId(long id);
 
+    Page<Event> findAllByOwnerId(Long ownerId, Pageable pageable);
+
     @Query(value = "SELECT events.*" +
-            "FROM tag_events" +
+            "FROM public.tag_events" +
             "JOIN events ON tag_events.events_id = events.id" +
             "WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_events WHERE events_id = :eventId)" +
             "AND tag_events.events_id != :eventId" +

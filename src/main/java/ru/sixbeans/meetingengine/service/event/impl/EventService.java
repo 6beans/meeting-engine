@@ -29,6 +29,10 @@ public class EventService {
                 .map(User::getId).toList();
     }
 
+    public Page<EventData> findAllEventsByOwnerId(Long ownerId, Pageable pageable) {
+        return eventRepository.findAllByOwnerId(ownerId, pageable).map(mapper::map);
+    }
+
     public EventData getById(long eventId) {
         return eventRepository.findById(eventId).map(mapper::map)
                 .orElseThrow(() -> new EventNotFoundException(eventId));
