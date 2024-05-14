@@ -1,7 +1,6 @@
 package ru.sixbeans.meetingengine.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.sixbeans.meetingengine.entity.Event;
@@ -32,9 +31,6 @@ public interface UserMapper {
                 .toList();
     }
 
-    @Mapping(source = "tags", target = "tagDTOs", qualifiedByName = "tagToTagData")
-    @Mapping(source = "events", target = "eventIds", qualifiedByName = "eventToEventId")
-    @Mapping(source = "memberEvents", target = "memberEventIds", qualifiedByName = "eventToEventId")
     UserData map(User user);
 
     List<UserData> map(Collection<User> users);

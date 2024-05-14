@@ -51,6 +51,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public byte[] getUserAvatar(long userId) {
+        return userRepository.getReferenceById(userId)
+                .getAvatar();
+    }
+
+    @Transactional
+    public void updateUserAvatar(long userId, byte[] avatar) {
+        userRepository.getReferenceById(userId)
+                .setAvatar(avatar);
+    }
+
+    @Transactional(readOnly = true)
     public List<UserData> findAllUserSubscriptions(long userId) {
         return userRepository.findById(userId).map(User::getSubscriptions)
                 .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));

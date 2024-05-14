@@ -13,8 +13,7 @@ import java.io.Serializable;
 public record UserData(Long id,
                        @NotBlank String email,
                        @NotBlank String userName,
-                       String profileDescription,
-                       byte[] avatar)
+                       String profileDescription)
         implements Serializable {
 
 }
