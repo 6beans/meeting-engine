@@ -17,16 +17,15 @@ public class GoogleOidcProfilePictureProvider implements OidcProfilePictureProvi
 
     @Override
     public boolean supports(OidcUser user) {
-        return "accounts.google.com"
-                .equals(user.getIssuer().getHost());
+        return user.getIssuer().getHost()
+                .equals("accounts.google.com");
     }
 
     @Override
     public Optional<byte[]> getProfilePicture(OidcUser user) {
         String url = Objects.requireNonNull(user.getPicture());
-        String basePart = url.split("=s96-c")[0];
-        String adjustedUrl = basePart + "=s512-c";
-        return fetchPicture(adjustedUrl);
+        String resized = url.replace("=s\\d+-c", "=s128-c");
+        return fetchPicture(resized);
     }
 
     private Optional<byte[]> fetchPicture(String url) {
