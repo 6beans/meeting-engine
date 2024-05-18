@@ -3,6 +3,7 @@ package ru.sixbeans.meetingengine.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import ru.sixbeans.meetingengine.service.chanceMeeting.impl.ChanceMeetingStatus;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +42,19 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private PersonalInfo personalInfo;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private ChanceMeetingStatus chanceMeetingStatus = ChanceMeetingStatus.NOT_REGISTERED;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "user_meetings",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "meeting_partner_id")
+    )
+    private Set<User> userMeetings = new HashSet<>();
 
     @Builder.Default
     @ManyToMany(mappedBy = "users")
