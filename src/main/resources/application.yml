@@ -1,4 +1,17 @@
 spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: meetis228@mail.ru
+    password: 1qYkgXKD2ktyxGyvQysa
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:postgres}/engine
     username: engine
