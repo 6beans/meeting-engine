@@ -2,7 +2,7 @@ package ru.sixbeans.meetingengine.service.email.impl;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmailService {
 
     private final JavaMailSender mailSender;
@@ -19,7 +19,7 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        helper.setFrom("meetis228@mail.ru","MEETIS");
+        helper.setFrom("meetis228@mail.ru", "MEETIS");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
