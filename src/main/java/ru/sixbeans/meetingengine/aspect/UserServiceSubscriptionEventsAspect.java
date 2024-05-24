@@ -7,8 +7,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import ru.sixbeans.meetingengine.entity.User;
-import ru.sixbeans.meetingengine.event.UserSubscribedUser;
+import ru.sixbeans.meetingengine.event.UserSubscribedEvent;
 
 @Aspect
 @Component
@@ -20,7 +19,7 @@ public class UserServiceSubscriptionEventsAspect {
 
     @AfterReturning(pointcut = "execution(* ru.sixbeans.meetingengine.service.user.impl.UserService.subscribe(..))")
     public void handleEntityNotFoundException(JoinPoint jp) {
-        var event = new UserSubscribedUser(
+        var event = new UserSubscribedEvent(
                 jp.getThis(),
                 (User) jp.getArgs()[0],
                 (User) jp.getArgs()[1]
