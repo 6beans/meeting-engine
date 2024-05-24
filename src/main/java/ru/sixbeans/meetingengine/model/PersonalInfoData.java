@@ -12,6 +12,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PersonalInfoData(Long id,
                                @NotBlank String fullName,
+                               String publicEmail,
                                String instagram,
                                String telegram,
                                String github,

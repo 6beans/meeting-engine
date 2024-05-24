@@ -23,6 +23,8 @@ public class PersonalInfo {
     @Column(nullable = false)
     private String fullName;
 
+    private String publicEmail;
+
     private String instagram;
 
     private String telegram;
