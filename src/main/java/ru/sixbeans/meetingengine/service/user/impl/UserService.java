@@ -1,11 +1,9 @@
 package ru.sixbeans.meetingengine.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
-import ru.sixbeans.meetingengine.event.UserSubscribedUser;
 import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.mapper.UserMapper;
 import ru.sixbeans.meetingengine.model.PersonalInfoData;
@@ -23,7 +21,7 @@ public class UserService {
 
     private final UserMapper mapper;
     private final UserRepository userRepository;
-    private final ApplicationEventPublisher publisher;
+
     @Transactional(readOnly = true)
     public UserData getUser(String userName) {
         var user = userRepository.findByUserName(userName);
@@ -92,8 +90,6 @@ public class UserService {
         User subscription = userRepository.getReferenceById(subscriptionId);
         user.getSubscriptions().add(subscription);
         subscription.getSubscribers().add(user);
-
-        publisher.publishEvent(new UserSubscribedUser(this, user, subscription));
     }
 
     @Transactional
