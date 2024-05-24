@@ -21,21 +21,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByIdAndSubscriptions_Id(Long userId, Long subscriberId);
 
-    @Query(value = "SELECT users.*" +
-            "FROM tag_users" +
-            "JOIN users ON tag_users.users_id = users.id" +
-            "WHERE tag_users.tags_id IN (SELECT tags_id FROM tag_users WHERE users_id = :userId)" +
-            "AND tag_users.users_id != :userId" +
-            "GROUP BY users.id" +
-            "ORDER BY  COUNT(tag_users.tags_id) DESC", nativeQuery = true)
+    @Query(value = """
+            SELECT users.*
+            FROM tag_users
+            JOIN users ON tag_users.users_id = users.id
+            WHERE tag_users.tags_id IN (SELECT tags_id FROM tag_users WHERE users_id = :userId)
+            AND tag_users.users_id != :userId
+            GROUP BY users.id
+            ORDER BY  COUNT(tag_users.tags_id)
+            DESC""", nativeQuery = true)
     List<User> getRecommendedUsers(@Param("userId") Long userId);
 
-    @Query(value = "SELECT users.* " +
-            "FROM users " +
-            "JOIN tag_users ON users.id = tag_users.users_id " +
-            "WHERE tag_users.tags_id IN :tags " +
-            "GROUP BY users.id " +
-            "ORDER BY COUNT(tag_users.tags_id) DESC", nativeQuery = true)
+    @Query(value = """
+            SELECT users.*
+            FROM users
+            JOIN tag_users ON users.id = tag_users.users_id
+            WHERE tag_users.tags_id IN :tags
+            GROUP BY users.id
+            ORDER BY COUNT(tag_users.tags_id)
+            DESC""", nativeQuery = true)
     List<User> filterUsersByTags(@Param("tags") Set<Integer> tags);
-
 }
