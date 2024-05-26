@@ -22,29 +22,48 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-mail:3.2.5")
+    // Spring Boot Starters
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.webjars:bootstrap:4.5.2")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+    // WebJars
+    implementation("org.webjars:bootstrap:${property("bootstrap-version")}")
+
+    // Thymeleaf Extras
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+
+    // Spring Session
     implementation("org.springframework.session:spring-session-jdbc")
     implementation("org.springframework.session:spring-session-data-redis")
-    testImplementation("org.springframework.security:spring-security-test")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+
+    // Development Tools
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    // Database Drivers
+    runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2")
     testRuntimeOnly("com.h2database:h2")
-    implementation("org.mapstruct:mapstruct:1.4.2.Final")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
+
+    // Docker Compose
+    runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
+
+    // MapStruct
+    implementation("org.mapstruct:mapstruct:${property("mapstruct-version")}")
+    annotationProcessor("org.mapstruct:mapstruct-processor:${property("mapstruct-version")}")
+
+    // Testing
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<Test> {

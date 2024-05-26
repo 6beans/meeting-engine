@@ -31,4 +31,4 @@ spring:
             scope: openid, profile, email
         provider:
           google:
-            issuerUri: https://accounts.google.com
+            issuer-uri: https://accounts.google.com
