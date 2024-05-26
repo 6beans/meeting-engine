@@ -24,7 +24,7 @@ public class GoogleOidcProfilePictureProvider implements OidcProfilePictureProvi
     @Override
     public Optional<byte[]> getProfilePicture(OidcUser user) {
         String url = Objects.requireNonNull(user.getPicture());
-        String resized = url.replace("=s\\d+-c", "=s128-c");
+        String resized = url.replaceAll("=s\\d+-c", "=s256-c");
         return fetchPicture(resized);
     }
 
