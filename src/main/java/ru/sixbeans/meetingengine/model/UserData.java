@@ -13,6 +13,7 @@ import java.io.Serializable;
 public record UserData(Long id,
                        @NotBlank String email,
                        @NotBlank String userName,
+                       @NotBlank String fullName,
                        String profileDescription)
         implements Serializable {
 

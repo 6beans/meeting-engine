@@ -20,8 +20,9 @@ public class EmailNotificationListener {
     @SneakyThrows
     @EventListener
     public void sendEmailNotification(UserSubscribedEvent event) {
-        var subscriberFullName = userService.getUserPersonalInfo(event.getSubscriberId()).fullName();
-        var email = userService.getUserPersonalInfo(event.getSubscriptionId()).publicEmail();
+        var userData = userService.getUser(event.getSubscriberId());
+        var subscriberFullName = userData.fullName();
+        var email = userData.email();
         String subject = "Someone liked you! 0_0";
         String text = """
                 <p>

@@ -7,15 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.User;
-import ru.sixbeans.meetingengine.exception.UserNotFoundException;
-import ru.sixbeans.meetingengine.model.UserData;
 import ru.sixbeans.meetingengine.service.user.impl.UserService;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,19 +33,15 @@ class NotificationServiceTest {
                 .subject("externalId1")
                 .userName("@username1")
                 .email("meetis228@mail.ru")
-                .personalInfo(PersonalInfo.builder()
-                        .fullName("Full Name")
-                        .build())
+                .fullName("Full Name")
                 .build();
 
         user2 = User.builder()
                 .issuer("issuer")
                 .subject("externalId2")
                 .userName("@username2")
+                .fullName("Full Name")
                 .email("www.ion2005@mail.ru")
-                .personalInfo(PersonalInfo.builder()
-                        .fullName("Full Name")
-                        .build())
                 .build();
 
         entityManager.persist(user1);
@@ -70,5 +59,4 @@ class NotificationServiceTest {
         entityManager.flush();
         assertThat(userService.isSubscriber(user2.getId(), user1.getId())).isFalse();
     }
-
 }

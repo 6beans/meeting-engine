@@ -4,10 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import ru.sixbeans.meetingengine.entity.Event;
-import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.Tag;
 import ru.sixbeans.meetingengine.entity.User;
-import ru.sixbeans.meetingengine.model.PersonalInfoData;
 import ru.sixbeans.meetingengine.model.TagData;
 import ru.sixbeans.meetingengine.model.UserData;
 
@@ -34,6 +32,4 @@ public interface UserMapper {
     UserData map(User user);
 
     List<UserData> map(Collection<User> users);
-
-    PersonalInfoData map(PersonalInfo personalInfo);
 }
