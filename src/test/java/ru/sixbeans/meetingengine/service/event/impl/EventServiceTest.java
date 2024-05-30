@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.Event;
-import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.User;
 
 import java.time.LocalDate;
@@ -36,10 +35,8 @@ class EventServiceTest {
                 .issuer("issuer")
                 .subject("externalId1")
                 .userName("@username1")
+                .fullName("Full Name")
                 .email("email1@example.com")
-                .personalInfo(PersonalInfo.builder()
-                        .fullName("Full Name")
-                        .build())
                 .build();
 
         event = Event.builder().id(null).endDate(LocalDate.now().plusDays(1))

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.mapper.UserMapper;
-import ru.sixbeans.meetingengine.model.PersonalInfoData;
 import ru.sixbeans.meetingengine.model.UserData;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
@@ -42,12 +41,6 @@ public class UserService {
         return userIds.stream().map(userRepository::findById)
                 .flatMap(Optional::stream).map(mapper::map)
                 .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public PersonalInfoData getUserPersonalInfo(long userId) {
-        return userRepository.findById(userId).map(User::getPersonalInfo)
-                .map(mapper::map).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Transactional(readOnly = true)

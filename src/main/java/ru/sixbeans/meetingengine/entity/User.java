@@ -31,6 +31,10 @@ public class User {
     private String userName;
 
     @NotBlank
+    @Column(nullable = false)
+    private String fullName;
+
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -38,9 +42,6 @@ public class User {
     private byte[] avatar;
 
     private String profileDescription;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private PersonalInfo personalInfo;
 
     @Builder.Default
     @ManyToMany(mappedBy = "users")

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.repository.UserRepository;
@@ -34,11 +33,6 @@ public class OidcUserInitializationService {
         user.setSubject(subject);
         user.setEmail(principal.getEmail());
         profilePicture.ifPresent(user::setAvatar);
-
-        PersonalInfo personalInfo = new PersonalInfo();
-        personalInfo.setFullName(principal.getFullName());
-        personalInfo.setUser(user);
-        user.setPersonalInfo(personalInfo);
 
         userRepository.save(user);
         return user.getId();

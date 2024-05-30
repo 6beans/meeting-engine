@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.sixbeans.meetingengine.entity.PersonalInfo;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.exception.UserNotFoundException;
 import ru.sixbeans.meetingengine.model.UserData;
@@ -39,18 +38,15 @@ class UserServiceTest {
                 .subject("externalId1")
                 .userName("@username1")
                 .email("email1@example.com")
-                .personalInfo(PersonalInfo.builder()
-                        .fullName("Full Name")
-                        .build())
+                .fullName("Full Name")
                 .build();
+
         user2 = User.builder()
                 .issuer("issuer")
                 .subject("externalId2")
                 .userName("@username2")
                 .email("email2@example.com")
-                .personalInfo(PersonalInfo.builder()
-                        .fullName("Full Name")
-                        .build())
+                .fullName("Full Name")
                 .build();
 
         entityManager.persist(user1);
