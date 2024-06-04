@@ -1,7 +1,6 @@
 package ru.sixbeans.meetingengine.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
@@ -26,22 +25,8 @@ public class User {
     @Column(unique = true, nullable = false)
     private String subject;
 
-    @NotBlank
-    @Column(unique = true, nullable = false)
-    private String userName;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String fullName;
-
-    @NotBlank
-    @Column(unique = true, nullable = false)
-    private String email;
-
     @Lob
     private byte[] avatar;
-
-    private String profileDescription;
 
     @Builder.Default
     @ManyToMany(mappedBy = "users")

@@ -22,15 +22,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserData getUser(String userName) {
-        var user = userRepository.findByUserName(userName);
-        if (user.isEmpty() || !userName.startsWith("@"))
-            throw new UserNotFoundException(userName);
-        else return user.map(mapper::map)
-                .orElseThrow(() -> new UserNotFoundException(userName));
-    }
-
-    @Transactional(readOnly = true)
     public UserData getUser(long userId) {
         return userRepository.findById(userId).map(mapper::map)
                 .orElseThrow(() -> new UserNotFoundException(userId));

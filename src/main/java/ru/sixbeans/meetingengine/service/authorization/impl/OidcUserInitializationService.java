@@ -13,7 +13,6 @@ import ru.sixbeans.meetingengine.repository.UserRepository;
 public class OidcUserInitializationService {
 
     private final UserRepository userRepository;
-    private final OidcProfilePictureService profilePictureService;
 
     @Transactional
     public Long createUserIfNotExist(OidcUser principal) {
@@ -25,14 +24,11 @@ public class OidcUserInitializationService {
                     .getId();
         }
 
-        var profilePicture = profilePictureService.getProfilePicture(principal);
+        principal.getClaims().entrySet().forEach(System.out::println);
 
         User user = new User();
         user.setIssuer(issuer);
-        user.setUserName(subject);
         user.setSubject(subject);
-        user.setEmail(principal.getEmail());
-        profilePicture.ifPresent(user::setAvatar);
 
         userRepository.save(user);
         return user.getId();
