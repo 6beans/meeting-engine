@@ -8,7 +8,17 @@ services:
       POSTGRES_DB: engine
       POSTGRES_USER: engine
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  redis:
-    image: redis
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: engine
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD}
     ports:
-      - '6379'
+      - "8080:8080"
+    depends_on:
+      - postgres
