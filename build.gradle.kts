@@ -38,10 +38,6 @@ dependencies {
     // Thymeleaf Extras
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
-    // Spring Session
-    implementation("org.springframework.session:spring-session-jdbc")
-    implementation("org.springframework.session:spring-session-data-redis")
-
     // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
