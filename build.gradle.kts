@@ -53,6 +53,9 @@ dependencies {
     // Docker Compose
     runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
 
+    // Keycloak
+    implementation("org.keycloak:keycloak-admin-client:${property("keycloak-version")}")
+
     // MapStruct
     implementation("org.mapstruct:mapstruct:${property("mapstruct-version")}")
     annotationProcessor("org.mapstruct:mapstruct-processor:${property("mapstruct-version")}")
