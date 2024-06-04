@@ -11,8 +11,6 @@ import java.util.Set;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUserName(String username);
-
     boolean existsByIssuerAndSubject(String provider, String subject);
 
     Optional<User> findByIssuerAndSubject(String issuer, String subject);
