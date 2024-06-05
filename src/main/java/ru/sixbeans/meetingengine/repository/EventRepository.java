@@ -22,20 +22,33 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             SELECT events.*
             FROM public.tag_events
             JOIN events ON tag_events.events_id = events.id
-            WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_events WHERE events_id = :eventId)
-            AND tag_events.events_id != :eventId
+            WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_users WHERE users_id = :userId)
+            AND events.is_active = true
             GROUP BY events.id
-            ORDER BY  COUNT(tag_events.tags_id)
-            DESC""", nativeQuery = true)
-    List<Event> getRecommendedEvents(@Param("eventId") Long eventId);
+            ORDER BY COUNT(tag_events.tags_id)
+            DESC""",
+            countQuery = """
+            SELECT events.*
+            FROM public.tag_events
+            JOIN events ON tag_events.events_id = events.id
+            WHERE tag_events.tags_id IN (SELECT tags_id FROM tag_users WHERE users_id = :userId)
+            AND events.is_active = true
+            """, nativeQuery = true)
+    Page<Event> getRecommendedEvents(@Param("userId") Long userId, Pageable pageable);
 
     @Query(value = """
             SELECT events.*
             FROM events
             JOIN tag_events ON events.id = tag_events.events_id
-            WHERE tag_events.tags_id IN :tags\
+            WHERE tag_events.tags_id IN :tags
             GROUP BY events.id
             ORDER BY COUNT(tag_events.tags_id)
-            DESC""", nativeQuery = true)
-    List<Event> filterEventsByTags(@Param("tags") Set<Integer> tags);
+            DESC""",
+            countQuery = """
+            SELECT COUNT(DISTINCT events.id)
+            FROM events
+            JOIN tag_events ON events.id = tag_events.events_id
+            WHERE tag_events.tags_id IN :tags
+            """, nativeQuery = true)
+    Page<Event> filterEventsByTags(@Param("tags") Set<Integer> tags, Pageable pageable);
 }
