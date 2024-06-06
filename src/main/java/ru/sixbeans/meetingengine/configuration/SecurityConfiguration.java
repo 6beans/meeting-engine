@@ -24,10 +24,11 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/logout", "/css/**", "/js/**", "/webjars/**")
+                .requestMatchers("/", "/logout", "/css/**", "/js/**", "/webjars/**")
                 .permitAll().anyRequest().authenticated());
         http.sessionManagement(s -> s.maximumSessions(1));
-        http.oauth2Login(oauth2 -> oauth2.loginPage("/login")
+        http.oauth2Login(oauth2 -> oauth2
+                .loginPage("/oauth2/authorization/keycloak")
                 .successHandler(successHandler)
                 .failureHandler(failureHandler()));
         http.logout(logout -> logout
