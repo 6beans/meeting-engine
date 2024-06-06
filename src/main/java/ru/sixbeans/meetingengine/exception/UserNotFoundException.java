@@ -9,18 +9,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UserNotFoundException extends EntityNotFoundException {
 
     public UserNotFoundException() {
+
     }
 
-    public UserNotFoundException(long id) {
-        super("User with id " + id + " not found");
+    public UserNotFoundException(String userId) {
+        super("User with id " + userId + " not found");
     }
 
     public UserNotFoundException(Exception cause) {
         super(cause);
-    }
-
-    public UserNotFoundException(String message) {
-        super(message);
     }
 
     public UserNotFoundException(String message, Exception cause) {
