@@ -9,7 +9,7 @@ import java.io.Serializable;
  * DTO for {@link User}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserData(String subject, String userName,
+public record UserData(String id, String username,
                        String firstName, String secondName,
                        String email, String about)
         implements Serializable {
