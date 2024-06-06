@@ -28,7 +28,7 @@ public class TagService {
     private final TagMapper tagMapper;
 
     @Transactional(readOnly = true)
-    public Collection<TagData> findAllUserTags(long userId) {
+    public Collection<TagData> findAllUserTags(String userId) {
         return userRepository.findById(userId)
                 .map(User::getTags).map(tagMapper::map)
                 .orElseThrow(() -> new UserNotFoundException(userId));
@@ -53,14 +53,14 @@ public class TagService {
     }
 
     @Transactional
-    public void addTagToUser(long userId, long tagId) {
+    public void addTagToUser(String userId, long tagId) {
         User user = userRepository.getReferenceById(userId);
         Tag tag = tagRepository.getReferenceById(tagId);
         user.getTags().add(tag);
     }
 
     @Transactional
-    public void removeTagFromUser(long userId, long tagId) {
+    public void removeTagFromUser(String userId, long tagId) {
         User user = userRepository.getReferenceById(userId);
         Tag tag = tagRepository.getReferenceById(tagId);
         user.getTags().remove(tag);
