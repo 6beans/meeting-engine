@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * DTO for {@link Event}
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record EventData(Long id, Long ownerId,
+public record EventData(Long id, String ownerId,
                         @NotBlank String title,
                         String description,
                         LocalDate creationDate,
