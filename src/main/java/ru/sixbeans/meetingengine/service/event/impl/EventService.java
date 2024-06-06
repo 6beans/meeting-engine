@@ -31,7 +31,7 @@ public class EventService {
                 .map(User::getId).toList();
     }
 
-    public Page<EventData> findAllEventsByOwnerId(Long ownerId, Pageable pageable) {
+    public Page<EventData> findAllEventsByOwnerId(String ownerId, Pageable pageable) {
         return eventRepository.findAllByOwnerId(ownerId, pageable).map(mapper::map);
     }
 
@@ -48,7 +48,7 @@ public class EventService {
         return mapper.map(eventRepository.findAllByIsActive(false));
     }
 
-    public List<EventData> findAllByOwnerId(long ownerId) {
+    public List<EventData> findAllByOwnerId(String ownerId) {
         return mapper.map(eventRepository.findAllByOwnerId(ownerId));
     }
 
