@@ -28,7 +28,6 @@ public class KeycloakConfiguration {
 
     @Bean
     public Keycloak keycloak() {
-        System.out.println(logoutUrl);
         return KeycloakBuilder.builder().serverUrl(serverUrl)
                 .realm("master").clientId("admin-cli")
                 .username(username).password(password)
