@@ -39,11 +39,14 @@ public class UserProfileService {
         representation.setFirstName(userData.firstName());
         representation.setLastName(userData.secondName());
         representation.singleAttribute("about", userData.about());
-        // User Email
-        representation.setEmail(userData.email());
-        representation.setEmailVerified(false);
         resource.update(representation);
-        resource.sendVerifyEmail();
+        // User Email
+        if (!representation.getEmail().equals(userData.email())) {
+            representation.setEmail(userData.email());
+            representation.setEmailVerified(false);
+            resource.update(representation);
+            resource.sendVerifyEmail();
+        }
     }
 
     public void updateUserPassword(String id, String password) {
