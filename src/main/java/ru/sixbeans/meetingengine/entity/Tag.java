@@ -25,10 +25,10 @@ public class Tag {
 
     @NotBlank
     @Column(nullable = false)
-    private String category;
+    private String id;
 
-    @ManyToMany
     @Builder.Default
+    @ManyToMany(mappedBy = "tags")
     private Set<User> users = new HashSet<>();
 
     @ManyToMany
