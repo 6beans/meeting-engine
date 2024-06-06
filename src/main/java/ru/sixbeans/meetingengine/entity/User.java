@@ -17,14 +17,14 @@ public class User {
 
     @Id
     @Column(nullable = false)
-    private String id; // Keycloak subject
+    private String id;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] avatar;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany()
     private Set<Tag> tags = new HashSet<>();
 
     @Builder.Default
