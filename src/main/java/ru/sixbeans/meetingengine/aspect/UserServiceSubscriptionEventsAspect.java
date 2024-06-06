@@ -21,8 +21,8 @@ public class UserServiceSubscriptionEventsAspect {
     public void handleEntityNotFoundException(JoinPoint jp) {
         var event = new UserSubscribedEvent(
                 jp.getThis(),
-                (Long) jp.getArgs()[0],
-                (Long) jp.getArgs()[1]
+                (String) jp.getArgs()[0],
+                (String) jp.getArgs()[1]
         );
         publisher.publishEvent(event);
     }

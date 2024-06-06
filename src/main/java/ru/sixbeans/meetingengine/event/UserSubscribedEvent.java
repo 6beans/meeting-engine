@@ -6,10 +6,10 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 public class UserSubscribedEvent extends ApplicationEvent {
 
-    private final long subscriberId;
-    private final long subscriptionId;
+    private final String subscriberId;
+    private final String subscriptionId;
 
-    public UserSubscribedEvent(Object source, long subscriberId, long subscriptionId) {
+    public UserSubscribedEvent(Object source, String subscriberId, String subscriptionId) {
         super(source);
         this.subscriberId = subscriberId;
         this.subscriptionId = subscriptionId;
