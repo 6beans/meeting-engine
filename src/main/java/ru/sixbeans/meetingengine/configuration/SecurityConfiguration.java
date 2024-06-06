@@ -26,12 +26,12 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/logout", "/css/**", "/js/**", "/webjars/**")
                 .permitAll().anyRequest().authenticated());
+        http.sessionManagement(s -> s.maximumSessions(1));
         http.oauth2Login(oauth2 -> oauth2.loginPage("/login")
                 .successHandler(successHandler)
                 .failureHandler(failureHandler()));
         http.logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
