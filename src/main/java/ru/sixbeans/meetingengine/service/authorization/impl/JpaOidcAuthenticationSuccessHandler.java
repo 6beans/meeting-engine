@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.sixbeans.meetingengine.entity.User;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class JpaOidcAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -25,11 +29,18 @@ public class JpaOidcAuthenticationSuccessHandler implements AuthenticationSucces
         if (authentication.getPrincipal() instanceof OidcUser principal) {
             String subject = principal.getSubject();
             if (!userRepository.existsById(subject)) {
-                User user = new User();
-                user.setId(subject);
-                userRepository.save(user);
+                userRepository.save(User.builder()
+                        .avatar(defaultAvatar())
+                        .id(subject).build());
             }
         } else throw new IllegalStateException("Unsupported authentication type: " + authentication);
         response.sendRedirect("/");
+    }
+
+    private byte[] defaultAvatar() throws IOException {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        try (InputStream is = classloader.getResourceAsStream("static/default.png")) {
+            return Objects.requireNonNull(is).readAllBytes();
+        }
     }
 }
