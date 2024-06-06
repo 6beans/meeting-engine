@@ -16,16 +16,11 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false)
-    private String issuer;
-
-    @Column(unique = true, nullable = false)
-    private String subject;
+    private String id; // Keycloak subject
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] avatar;
 
     @Builder.Default
