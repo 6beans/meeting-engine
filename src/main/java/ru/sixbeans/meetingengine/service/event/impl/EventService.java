@@ -25,7 +25,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
 
-    public Collection<Long> findAllEventMemberIds(long eventId) {
+    public Collection<String> findAllEventMemberIds(long eventId) {
         return eventRepository.findById(eventId).stream()
                 .map(Event::getMembers).flatMap(Collection::stream)
                 .map(User::getId).toList();
@@ -53,7 +53,7 @@ public class EventService {
     }
 
     @Transactional
-    public void addEventToUser(EventData eventData, long userId) {
+    public void addEventToUser(EventData eventData, String userId) {
         User user = userRepository.getReferenceById(userId);
         Event event = mapper.map(eventData);
         event.setOwner(user);
@@ -68,14 +68,14 @@ public class EventService {
     }
 
     @Transactional
-    public void addMemberToEvent(long userId, long eventId) {
+    public void addMemberToEvent(String userId, long eventId) {
         var user = userRepository.getReferenceById(userId);
         var event = eventRepository.getReferenceById(eventId);
         event.getMembers().add(user);
     }
 
     @Transactional
-    public void removeMemberFromEvent(long userId, long eventId) {
+    public void removeMemberFromEvent(String userId, long eventId) {
         var user = userRepository.getReferenceById(userId);
         var event = eventRepository.getReferenceById(eventId);
         event.getMembers().remove(user);

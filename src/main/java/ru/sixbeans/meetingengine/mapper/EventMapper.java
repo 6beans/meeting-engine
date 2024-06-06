@@ -13,7 +13,7 @@ import java.util.List;
 public interface EventMapper {
 
     @Named("userToUserId")
-    static Long userToUserId(User user) {
+    static String userToUserId(User user) {
         return user.getId();
     }
 
