@@ -1,0 +1,34 @@
+.navbar {
+    font-family: 'PT Sans Narrow', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand span {
+    font-size: 24px;
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: #005b9f;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #004080;
+}
+
+.dropdown-menu {
+    background-color: #f8f9fa;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item:hover {
+    background-color: #e9ecef;
+}
+
+.form-inline .form-control {
+    border-radius: 0;
+}
+
+.form-inline .btn-outline-success {
+    border-radius: 0;
+}
