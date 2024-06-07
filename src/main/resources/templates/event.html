@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title> [[${pageTitle}]] </title>
+</head>
+<body>
+<div th:fragment="event-card(event, tags, picture)">
+    <div class="event-card">
+        <div class="event-title" id="event-title" th:text="${event.title}">Event</div>
+        <div class="image-file">
+            <img id="image" th:src="'data:image/jpeg;base64,' + ${picture}" alt="Picture">
+        </div>
+        <div class="tags" id="card-tags">
+            <span th:each="tag : ${tags}" th:text="${tag}">Tag</span>
+        </div>
+        <div class="event-dates">
+            <div class="start-date" id="event-startDate" th:text="${event.startDate}">Start Date</div>
+            <div class="end-date" id="event-endDate" th:text="${event.endDate}">End Date</div>
+        </div>
+        <div class="about" id="event-about" th:text="${event.about}">Event description here</div>
+    </div>
+</div>
+</body>
+</html>
