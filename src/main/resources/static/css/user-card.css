@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,400i,700");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css");
+
+:root {
+    --scale-factor: 1;
+}
+
+body {
+    font-family: Roboto, sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+.card {
+    background: #fff;
+    box-shadow: 0 calc(14px * var(--scale-factor)) calc(80px * var(--scale-factor)) rgba(34, 35, 58, 0.2);
+    border-radius: calc(4px * var(--scale-factor));
+    width: calc(210px * var(--scale-factor));
+    height: calc(320px * var(--scale-factor));
+    text-align: center;
+}
+
+.card h2 {
+    margin-top: calc(18px * var(--scale-factor));
+    font-size: calc(16px * var(--scale-factor));
+    font-weight: bold;
+}
+
+.img-avatar {
+    margin-top: calc(13px * var(--scale-factor));
+}
+
+.img-avatar img {
+    width: calc(100px * var(--scale-factor));
+    height: calc(100px * var(--scale-factor));
+    border-radius: calc(20px * var(--scale-factor));
+    object-fit: cover;
+}
+
+.tags {
+    margin-top: calc(6px * var(--scale-factor));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: calc(6px * var(--scale-factor));
+}
+
+.tags span {
+    color: black;
+    background-color: rgba(84, 188, 236, 0.4);
+    padding: calc(1px * var(--scale-factor)) calc(5px * var(--scale-factor));
+    border-radius: calc(11px * var(--scale-factor));
+    font-size: calc(10px * var(--scale-factor));
+}
+
+.about {
+    min-height: calc(80px * var(--scale-factor));
+    margin-top: calc(6px * var(--scale-factor));
+    font-style: italic;
+    font-size: calc(10px * var(--scale-factor));
+    padding: 0 calc(12px * var(--scale-factor));
+    color: black;
+}
+
+.actions {
+    display: compact;
+    justify-content: space-around;
+    margin-top: auto;
+}
+
+.actions button {
+    border: none;
+    padding: calc(12px * var(--scale-factor)) calc(6px * var(--scale-factor));
+    background: none;
+    font-size: calc(10px * var(--scale-factor));
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.actions button:hover {
+    color: rgb(84, 188, 236);
+}
+
+.actions i {
+    margin-left: calc(5px * var(--scale-factor));
+}

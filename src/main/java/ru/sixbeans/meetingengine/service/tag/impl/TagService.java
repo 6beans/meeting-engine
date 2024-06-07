@@ -29,7 +29,7 @@ public class TagService {
     @Transactional(readOnly = true)
     public Collection<String> findAllUserTags(String userId) {
         return userRepository.getReferenceById(userId).getTags()
-                .stream().map(Tag::getId).toList();
+                .stream().map(Tag::getId).sorted().toList();
     }
 
     @Transactional
