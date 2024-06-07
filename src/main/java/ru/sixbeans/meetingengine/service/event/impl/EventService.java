@@ -31,6 +31,11 @@ public class EventService {
                 .map(User::getId).toList();
     }
 
+    public Collection<EventData> findAllEventsByOwnerId(String ownerId) {
+        return eventRepository.findAllByOwnerId(ownerId).stream()
+                .map(mapper::map).toList();
+    }
+
     public Page<EventData> findAllEventsByOwnerId(String ownerId, Pageable pageable) {
         return eventRepository.findAllByOwnerId(ownerId, pageable).map(mapper::map);
     }
@@ -87,5 +92,17 @@ public class EventService {
         activeEvents.stream()
                 .filter(event -> expirationDate.isBefore(event.getEndDate()))
                 .forEach(event -> event.setIsActive(false));
+    }
+
+    @Transactional(readOnly = true)
+    public byte[] getEventPicture(long eventId) {
+        return eventRepository.getReferenceById(eventId)
+                .getPicture();
+    }
+
+    @Transactional
+    public void updateEventPicture(long eventId, byte[] avatar) {
+        eventRepository.getReferenceById(eventId)
+                .setPicture(avatar);
     }
 }
