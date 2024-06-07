@@ -47,8 +47,6 @@ dependencies {
 
     // Database Drivers
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("com.h2database:h2")
-    testRuntimeOnly("com.h2database:h2")
 
     // Docker Compose
     runtimeOnly("org.springframework.boot:spring-boot-docker-compose")
@@ -59,10 +57,6 @@ dependencies {
     // MapStruct
     implementation("org.mapstruct:mapstruct:${property("mapstruct-version")}")
     annotationProcessor("org.mapstruct:mapstruct-processor:${property("mapstruct-version")}")
-
-    // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
 }
 
 tasks.withType<Test> {
