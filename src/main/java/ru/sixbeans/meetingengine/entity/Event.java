@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +25,10 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    private String description;
+    private String about;
+
+    @Lob
+    private byte[] picture;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
@@ -45,10 +48,10 @@ public class Event {
     private Set<Tag> tags = new HashSet<>();
 
     @Column(columnDefinition = "DATE")
-    private LocalDate creationDate;
+    private LocalDateTime startDate;
 
     @Column(columnDefinition = "DATE")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(nullable = false)
     private Boolean isActive;
