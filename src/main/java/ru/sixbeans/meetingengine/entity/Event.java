@@ -53,6 +53,5 @@ public class Event {
     @Column(columnDefinition = "DATE")
     private LocalDateTime endDate;
 
-    @Column(nullable = false)
     private Boolean isActive;
 }

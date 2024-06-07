@@ -14,6 +14,7 @@ import ru.sixbeans.meetingengine.repository.EventRepository;
 import ru.sixbeans.meetingengine.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class EventService {
     }
 
     @Transactional
-    public void updateEventsActivity(LocalDate expirationDate) {
+    public void updateEventsActivity(LocalDateTime expirationDate) {
         List<Event> activeEvents = eventRepository.findAllByIsActive(true);
         activeEvents.stream()
                 .filter(event -> expirationDate.isBefore(event.getEndDate()))

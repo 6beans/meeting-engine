@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event</title>
+    <link href="/webjars/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/edit-event.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="container-fluid">
+    <div class="scrollable-left">
+        <form th:action="@{/events/new}" method="post" enctype="multipart/form-data">
+            <div class="form-group image-card">
+                <div class="image-area" id="image-area">
+                    <input type="file" id="image-input" name="picture" class="image-input" accept="image/*"
+                           style="display: none">
+                    <p>Drag & Drop your picture here or click to upload</p>
+                    <div id="image-content"></div>
+                </div>
+            </div>
+            <div class="form-group profile-card">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter event title"
+                           th:value="${event.title}">
+                </div>
+                <div class="form-group">
+                    <div id="titleValidationMessage" class="alert alert-danger" style="display: none;">
+                        Title must be between 3 and 36 characters.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tags-input">Tags</label>
+                    <div class="tags-input-container">
+                        <input maxlength="26" type="text" class="form-control" id="tags-input" placeholder="Add a tag">
+                        <div id="tags-container" class="tags-container"></div>
+                        <input type="hidden" id="tags" name="tags" th:value="${tags}">
+                    </div>
+                </div>
+                <div class="form-row align-items-center">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="datetime-local" class="form-control" id="startDate" name="startDate"
+                                   th:value="${event.startDate}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="datetime-local" class="form-control" id="endDate" name="endDate"
+                                   th:value="${event.endDate}">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="startDateValidationMessage" class="alert alert-danger" style="display: none;">
+                        Start Date must be before End Date.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="about">About</label>
+                    <textarea class="form-control" id="about" name="about" placeholder="Enter event description"
+                              th:text="${event.about}"></textarea>
+                </div>
+                <div class="form-group">
+                    <div id="aboutValidationMessage" class="alert alert-danger" style="display: none;">
+                        About must be between 10 and 200 characters.
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="saveButton" disabled>Save Changes</button>
+            </div>
+        </form>
+    </div>
+    <div class="splitter"></div>
+    <div class="fixed-right">
+        <div th:replace="~{event :: event-card(${event}, ${tags}, ${picture})}"></div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="/webjars/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/edit-event.js"></script>
+</body>
+</html>
