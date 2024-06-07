@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link href="/webjars/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/edit-profile.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{navbar :: navbar}"></div>
+<div class="container-fluid">
+    <div class="scrollable-left">
+        <form th:action="@{/profile}" method="post" enctype="multipart/form-data">
+            <div class="form-group image-card">
+                <div class="image-area" id="image-area">
+                    <input type="file" id="image-input" name="image" class="image-input" accept="image/*" style="display: none">
+                    <p>Drag & Drop your avatar here or click to upload</p>
+                    <div id="image-content"></div>
+                </div>
+            </div>
+            <div class="form-group profile-card">
+                <div class="form-group">
+                    <label for="userName">Username</label>
+                    <input type="text" class="form-control" id="userName" maxlength="16" name="userName" placeholder="Enter username" th:value="${user.username}">
+                    <div id="usernameLoading" class="loading-bar" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <div id="usernameValidationMessage" class="alert alert-danger" style="display: none;">
+                        Username is already taken.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" th:value="${user.firstName}">
+                </div>
+                <div class="form-group">
+                    <label for="secondName">Second Name</label>
+                    <input type="text" class="form-control" id="secondName" name="secondName" placeholder="Enter second name" th:value="${user.lastName}">
+                </div>
+                <div class="form-group">
+                    <label for="tags-input">Tags</label>
+                    <div class="tags-input-container">
+                        <input maxlength="26" type="text" class="form-control" id="tags-input" placeholder="Add a tag">
+                        <div id="tags-container" class="tags-container"></div>
+                        <input type="hidden" id="tags" name="tags" th:value="${tags}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" th:value="${user.email}">
+                    <div id="emailLoading" class="loading-bar" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <div id="emailValidationMessage" class="alert alert-danger" style="display: none;">
+                        Email is already in use.
+                    </div>
+                </div>
+                <div class="form-row align-items-center">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="New Password">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div id="passwordMismatchMessage" class="alert alert-danger" style="display: none;">
+                        Passwords do not match!
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="about">About</label>
+                    <textarea class="form-control" id="about" name="about" maxlength="200" rows="3" th:text="${user.firstAttribute('about')}"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="saveButton">Save Changes</button>
+            </div>
+        </form>
+    </div>
+    <div class="splitter"></div>
+    <div class="fixed-right">
+        <div class="card">
+            <h2 id="cardUserName" th:text="${user.username}">Username</h2>
+            <div class="img-avatar">
+                <img id="image" th:src="'data:image/jpeg;base64,' + ${avatar}" alt="Avatar">
+            </div>
+            <div class="tags" id="card-tags">
+                <!-- Tags will be dynamically inserted here -->
+            </div>
+            <div class="about" id="cardDesc" th:text="${user.firstAttribute('about')}">User description here</div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="/webjars/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script type="module" src="/js/edit-profile.js"></script>
+</body>
+</html>
